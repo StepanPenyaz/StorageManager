@@ -10,8 +10,7 @@ public class StorageRepository(StorageContext context) : IStorageRepository
     public async Task<IReadOnlyCollection<Container>> GetContainersWithEmptySectionsAsync()
     {
         var containers = await context.Containers
-            .Where(container => !container.Sections.Any()
-                || container.Sections.Any(section => !section.LotSections.Any()))
+            .Where(container => container.Sections.Any(section => section.LotSections.Count == 0))
             .Include(container => container.Sections)
             .AsNoTracking()
             .ToListAsync();
