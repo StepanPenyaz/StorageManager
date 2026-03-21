@@ -1,14 +1,12 @@
-﻿namespace Storage.Domain.Models;
+namespace Storage.Domain.Models;
 
-public class Section(int index)
+public class Lot(int itemId)
 {
     private readonly List<LotSection> _lotSections = [];
 
     public int Id { get; private set; }
 
-    public int Index { get; private set; } = index;
-
-    public int ContainerId { get; private set; }
+    public int ItemId { get; private set; } = itemId;
 
     public IReadOnlyCollection<LotSection> LotSections => _lotSections;
 }

@@ -2,7 +2,7 @@
 
 namespace Storage.Domain.Models;
 
-public class Container(ContainerType type)
+public class Container(ContainerType type, int number, Location location)
 {
     private readonly List<Section> _sections = [];
 
@@ -10,7 +10,13 @@ public class Container(ContainerType type)
 
     public int Id { get; private set; }
 
+    public int Number { get; private set; } = number;
+
     public ContainerType Type { get; private set; } = type;
+
+    public Location Location { get; private set; } = location;
+
+    public int ContainerGroupId { get; private set; }
 
     public void InitializeSections()
     {
