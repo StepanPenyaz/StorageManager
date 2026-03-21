@@ -18,6 +18,19 @@
 - Prefer `init` over `set` for immutability
 - Avoid regions
 - Use simple collection initializtion
+- Prefer using the conditional (ternary) operator `?:` instead of `if` statements for simple conditions.
+Examples: 
+```
+var value = condition
+    ? resultA
+    : resultB;
+```
+
+```
+public int Cabinet { get; } = cabinet >= 0
+    ? cabinet
+    : throw new ArgumentOutOfRangeException(nameof(cabinet));
+```
 
 ---
 
