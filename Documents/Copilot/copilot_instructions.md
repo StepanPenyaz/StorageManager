@@ -17,6 +17,7 @@
 - Use `required` keyword for required properties
 - Prefer `init` over `set` for immutability
 - Avoid regions
+- Use simple collection initializtion
 
 ---
 
@@ -25,7 +26,6 @@
 - Place interfaces in `Interfaces` folder
 - Place models (entities) in `Models` folder
 - Place enums in `Enums` folder
-- Place value objects in `ValueObjects` folder
 - Place EF configurations in `Configurations` folder
 
 ---
