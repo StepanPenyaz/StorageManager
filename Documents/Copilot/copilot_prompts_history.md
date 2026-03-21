@@ -31,3 +31,26 @@ Use the existing models in `Storage.Domain.Models` as a **reference and pattern 
 - Record this prompt in: `Documents/Copilot/copilot_prompts_history.md`
 - Include: Date, Used AI model
 ```
+
+---
+
+### 2026-03-21 — GitHub Copilot (GPT-5)
+
+**Full Prompt:**
+
+```
+# Copilot Prompt: Generate Data layer
+
+The data layer for the project should be added. 
+Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope of work.
+
+## Instructions
+
+- Follow rules defined in:
+  - `Documents/Copilot/copilot_instructions.md`
+
+## Documentation
+
+- Record full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
+- Include: Date, Used AI model
+```
