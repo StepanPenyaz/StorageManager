@@ -6,6 +6,10 @@ public class Container(ContainerType type, int number, Location location)
 {
     private readonly List<Section> _sections = [];
 
+    private Container() : this(default, default, new Location(default, default, default, default, default, default))
+    {
+    }
+
     public IReadOnlyCollection<Section> Sections => _sections;
 
     public int Id { get; private set; }
