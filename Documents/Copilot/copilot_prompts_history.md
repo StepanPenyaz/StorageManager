@@ -183,3 +183,28 @@ Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope 
 ```
 
 ---
+
+### 2026-03-22 — GitHub Copilot (Claude Sonnet 4.5)
+
+**Full Prompt:**
+
+```
+# Update Requirements From PR Notes
+
+## Instructions
+
+* Take all tricky parts from the PR description
+* Add them as required changes to the target file
+
+---
+
+## Documentation
+
+* Record this request in: `Documents/Copilot/copilot_prompts_history.md`
+* Include:
+
+  * Date
+  * Used AI model
+```
+
+---

@@ -170,7 +170,7 @@ Selection criteria:
 Processing steps for each matching Item node:
 1. Extract containerNumber, Qty (number), ItemID, LotID.
 2. DB actions (in a per-batch transaction):
-   - Upsert Lot record: ensure Lot.Id = LotID and Lot.ItemId = ItemID (if mismatch, log warning).
+   - Upsert Lot record: use the bsx LotID value directly as the Lot.Id primary key (Lot.Id is an external BrickLink identifier, e.g. 432075602, not an auto-generated surrogate). Because the Lot table uses IDENTITY by default, the implementation MUST enable explicit Lot.Id insertion for this flow (e.g. SET IDENTITY_INSERT Lots ON / OFF around the insert, or reconfigure the EF entity to remove ValueGeneratedOnAdd). Ensure no collision with any pre-existing auto-generated Lot.Id values before insertion. Ensure Lot.ItemId = ItemID (if ID already exists with a different ItemId, log warning and skip).
    - Find a Section within the container referenced by containerNumber to assign the Lot:
      - Prefer an empty Section (no Lot assigned).
      - If all sections occupied, select the section with highest Index (last section) in that container.
@@ -240,3 +240,19 @@ Idempotency:
 7. Produce final summary report and UI popup.
 
 Appendix — Small pseudocode sample (reference)
+
+13. Required implementation constraints
+
+The following constraints were identified as tricky parts during requirements review. Each must be explicitly handled by the implementing agent.
+
+**Tricky part 1 — Container counts use type layout, not slotsPerCell multiplier**
+- Required: Do not use a "slotsPerCell" multiplier when computing the number of Container records per group. Instead, use the type layout table directly: the number of containers per ContainerGroup equals `positionRows × positionColumns` per the layout for that type (PX12=12, PX6=6, PX4=4, PX2=2). Each position in the grid corresponds to exactly one Container record.
+
+**Tricky part 2 — bsx LotID must be used as Lot.Id primary key (explicit identity insertion required)**
+- Required: The `LotID` in a bsx `<Item>` node is a large external BrickLink identifier (e.g. `432075602`). It must be persisted as the `Lot.Id` primary key value, not as a separate external reference field. Because the `Lots` table uses an SQL Server IDENTITY column by default, the implementation must explicitly enable identity insertion for this flow (e.g. `SET IDENTITY_INSERT Lots ON` before insert and `OFF` after, or reconfigure the entity mapping to remove `ValueGeneratedOnAdd`). Before inserting, verify no existing Lot.Id conflicts.
+
+**Tricky part 3 — No Storage entity exists; hierarchy starts at Cabinet**
+- Required: Do not introduce or expect a `Storage` entity or "storage name" field. The domain hierarchy is: Cabinet → Shelf → ContainerGroup → Container → Section. The wizard must not present a "storage name" input. Validation must not reference a storage name.
+
+**Tricky part 4 — Section count per container is determined by type and is not configurable**
+- Required: Do not make the number of sections per container configurable at runtime. Section counts are fixed per container type and enforced by `Container.InitializeSections()`: PX12 → 3 sections (Index 1, 2, 3); PX6, PX4, PX2 → 1 section (Index 1). The implementation must call `InitializeSections()` and must not override or bypass its logic.
