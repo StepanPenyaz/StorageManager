@@ -1,0 +1,14 @@
+.cabinet {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 32px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.message {
+  padding: 40px 32px;
+  color: #8888aa;
+  font-size: 16px;
+}
