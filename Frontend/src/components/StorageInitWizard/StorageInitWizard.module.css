@@ -1,0 +1,280 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 15, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  z-index: 20;
+}
+
+.wizard {
+  width: 1200px;
+  max-height: 90vh;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.wizardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.wizardHeader h2 {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 20px;
+}
+
+.closeButton {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.steps {
+  padding: 12px 24px;
+  border-bottom: 1px solid #1e293b;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.stepContent {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.input,
+.select {
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #e2e8f0;
+}
+
+.helper {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.cabinetActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cabinetCard {
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 14px;
+  background: #0b1220;
+}
+
+.cabinetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.shelfBlock {
+  border: 1px dashed #1e293b;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.shelfTitle {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rowSelectors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.rowLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  background: #0b1220;
+}
+
+.summaryLabel {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.summaryValue {
+  color: #e2e8f0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.typeBadges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.fileInput {
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.previewCard {
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px;
+  background: #0b1220;
+}
+
+.previewHeader {
+  color: #e2e8f0;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.shelfPreview {
+  margin-top: 10px;
+}
+
+.groupGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.groupCell {
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 8px;
+  background: #111827;
+}
+
+.groupHeader {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.groupType {
+  color: #e2e8f0;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.groupRange {
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.successMessage {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.errorMessage {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 1px solid #1e293b;
+}
+
+.footerLeft,
+.footerRight {
+  display: flex;
+  gap: 10px;
+}
+
+.primaryButton,
+.secondaryButton,
+.removeButton {
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background: #2563eb;
+  color: #f8fafc;
+  border: none;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+}
+
+.removeButton {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
