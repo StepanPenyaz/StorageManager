@@ -4,6 +4,8 @@
 - Use file-scoped namespaces
 - Use primary constructors where applicable
 - Do not use comments or XML documentation (including <inheritdoc />)
+- For frontend code use React and Redux
+- All frontend code should be stored in `Frontend` folder
 
 ---
 
@@ -19,7 +21,7 @@
 - Avoid regions
 - Use simple collection initializtion
 - Prefer using the conditional (ternary) operator `?:` instead of `if` statements for simple conditions.
-Examples: 
+Examples:
 ```
 var value = condition
     ? resultA
@@ -31,6 +33,7 @@ public int Cabinet { get; } = cabinet >= 0
     ? cabinet
     : throw new ArgumentOutOfRangeException(nameof(cabinet));
 ```
+- Use the official Redux Style Guide (https://redux.js.org/style-guide/) for frontend code
 
 ---
 
