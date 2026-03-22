@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+ <Inventory Currency="PLN" BrickLinkChangelogId="450500">
+  <Item>
+   <ItemID>3622</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>6</ColorID>
+   <ItemName>Brick 1 x 3</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Green</ColorName>
+   <CategoryID>5</CategoryID>
+   <CategoryName>Brick</CategoryName>
+   <Status>I</Status>
+   <Qty>2</Qty>
+   <Price>0.109</Price>
+   <Condition>U</Condition>
+   <Remarks>#1541</Remarks>
+   <LotID>492728205</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>3010</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>6</ColorID>
+   <ItemName>Brick 1 x 4</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Green</ColorName>
+   <CategoryID>5</CategoryID>
+   <CategoryName>Brick</CategoryName>
+   <Status>I</Status>
+   <Qty>4</Qty>
+   <Price>0.147</Price>
+   <Condition>U</Condition>
+   <Remarks>#1549</Remarks>
+   <LotID>449171831</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>3622</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>1</ColorID>
+   <ItemName>Brick 1 x 3</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>White</ColorName>
+   <CategoryID>5</CategoryID>
+   <CategoryName>Brick</CategoryName>
+   <Status>I</Status>
+   <Qty>1</Qty>
+   <Price>0.160</Price>
+   <Condition>U</Condition>
+   <Remarks>#1017</Remarks>
+   <LotID>492728270</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>3002</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>1</ColorID>
+   <ItemName>Brick 2 x 3</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>White</ColorName>
+   <CategoryID>5</CategoryID>
+   <CategoryName>Brick</CategoryName>
+   <Status>I</Status>
+   <Qty>4</Qty>
+   <Price>0.163</Price>
+   <Condition>U</Condition>
+   <Remarks>#1332</Remarks>
+   <LotID>415165086</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>87087</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>5</ColorID>
+   <ItemName>Brick, Modified 1 x 1 with Stud on Side</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Red</ColorName>
+   <CategoryID>7</CategoryID>
+   <CategoryName>Brick, Modified</CategoryName>
+   <Status>I</Status>
+   <Qty>24</Qty>
+   <Price>0.144</Price>
+   <Condition>U</Condition>
+   <Remarks>#1399</Remarks>
+   <LotID>432075749</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>2420</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>11</ColorID>
+   <ItemName>Plate 2 x 2 Corner</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Black</ColorName>
+   <CategoryID>26</CategoryID>
+   <CategoryName>Plate</CategoryName>
+   <Status>I</Status>
+   <Qty>8</Qty>
+   <Price>0.135</Price>
+   <Condition>U</Condition>
+   <Remarks>#1180</Remarks>
+   <LotID>486324072</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>3023</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>86</ColorID>
+   <ItemName>Plate 1 x 2</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Light Bluish Gray</ColorName>
+   <CategoryID>26</CategoryID>
+   <CategoryName>Plate</CategoryName>
+   <Status>I</Status>
+   <Qty>31</Qty>
+   <Price>0.150</Price>
+   <Condition>U</Condition>
+   <Remarks>#1010</Remarks>
+   <LotID>517851958</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>3623</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>86</ColorID>
+   <ItemName>Plate 1 x 3</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Light Bluish Gray</ColorName>
+   <CategoryID>26</CategoryID>
+   <CategoryName>Plate</CategoryName>
+   <Status>I</Status>
+   <Qty>7</Qty>
+   <Price>0.200</Price>
+   <Condition>U</Condition>
+   <Remarks>#1134</Remarks>
+   <LotID>517851957</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>54200</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>1</ColorID>
+   <ItemName>Slope 30 1 x 1 x 2/3</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>White</ColorName>
+   <CategoryID>31</CategoryID>
+   <CategoryName>Slope</CategoryName>
+   <Status>I</Status>
+   <Qty>24</Qty>
+   <Price>0.081</Price>
+   <Condition>U</Condition>
+   <Remarks>#1232</Remarks>
+   <LotID>415953702</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>87079</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>1</ColorID>
+   <ItemName>Tile 2 x 4</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>White</ColorName>
+   <CategoryID>37</CategoryID>
+   <CategoryName>Tile</CategoryName>
+   <Status>I</Status>
+   <Qty>6</Qty>
+   <Price>0.449</Price>
+   <Condition>U</Condition>
+   <LotID>492727088</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+  <Item>
+   <ItemID>25269</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>1</ColorID>
+   <ItemName>Tile, Round 1 x 1 Quarter</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>White</ColorName>
+   <CategoryID>117</CategoryID>
+   <CategoryName>Tile, Round</CategoryName>
+   <Status>I</Status>
+   <Qty>17</Qty>
+   <Price>0.102</Price>
+   <Condition>U</Condition>
+   <LotID>445997694</LotID>
+   <MarkerText>1</MarkerText>
+  </Item>
+ </Inventory>
+ <GuiState Application="BrickStore" Version="2">
+  <ColumnLayout Compressed="1"><![CDATA[AAABa3icNc9JCgJBDIXhxHnWdp7admoRXOnWjSdwJyh4Ce/pnTSB/AUPPl5STdf1+DqLSNFysOjPjhpSiXPx1vGMNblbSo6vpew4WSqOj6VKU9NAHTR8dLM0NdACbUYd0OU7PZAwGoKR420ZgwnLU3ZmNHOaBc2SJgUrkIE12IAd1/c0A8fDUtBAn3dtNf43lz/2bhFx]]></ColumnLayout>
+  <SortFilterState Compressed="1"><![CDATA[AAAAQHicY2BgYAl2Cw5hANKM/xlAgJsBAhiBmAmImUFyQMwKxGxAzA7EHEDMCcRcAILbAos=]]></SortFilterState>
+ </GuiState>
+</BrickStoreXML>
