@@ -22,4 +22,15 @@ public class StorageRepository(StorageContext context) : IStorageRepository
 
         return containers;
     }
+
+    public async Task<Container?> GetContainerByNumberAsync(int containerNumber) =>
+        await context.Containers
+            .Include(container => container.Sections)
+                .ThenInclude(section => section.LotSections)
+            .FirstOrDefaultAsync(container => container.Number == containerNumber);
+
+    public void RemoveLotSection(LotSection lotSection) =>
+        context.Remove(lotSection);
+
+    public Task SaveChangesAsync() => context.SaveChangesAsync();
 }
