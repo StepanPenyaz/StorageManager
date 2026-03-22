@@ -6,26 +6,26 @@ Purpose
 Quick summary
 - UI: "Storage Init" wizard (3 stages: initial settings → cabinet/shelf config → optional .bsx import).
 - Output: DB records for ContainerGroups, Containers, Sections, Lots and LotSections; and an updated .bsx file with processed flags.
-- Numbering: deterministic sequential numeric indices assigned to atomic "slots" according to shelf configuration and container-type slot multipliers.
+- Numbering: deterministic sequential Container.Number values assigned according to a fixed cabinet→shelf→3×3 grid→within-group-position iteration order.
 
 1. Overview
-- Initialize a storage layout (cabinets → shelves → container-group-rows → columns) and create DB records for ContainerGroups, Containers, and Sections.
-- Optionally import inventory from a BrickStore XML (.bsx) file by matching <Remarks>#<container_number> entries to container slots and creating/updating Lot and LotSections records.
+- Initialize a storage layout (cabinets, each with 4 shelves, each shelf with a 3×3 grid of ContainerGroups) and create DB records for ContainerGroups, Containers, and Sections.
+- Optionally import inventory from a BrickStore XML (.bsx) file by matching <Remarks>#<container_number> entries to containers and creating/updating Lot and LotSections records.
 - Support large XML files via batched processing and incremental save points.
 
 2. High-level constraints and validations
 - Required inputs:
   - Container number starting index (positive integer, e.g., 1000)
-- Container group row must specify exactly one container type for the entire row.
-- All container groups in one shelf must have the same number of columns (columns is a shelf-level parameter).
-- Each container group row is defined by:
-  - number of rows (vertical repetition count)
-  - container type (one of PX12, PX6, PX4, PX2)
+- The storage structure is fixed by domain:
+  - Each Cabinet contains exactly 4 Shelves (index 1–4).
+  - Each Shelf contains exactly 9 Container Groups arranged in a fixed 3×3 grid (groupRow 1–3, groupColumn 1–3).
+- Each Container Group (grid cell) has exactly one container type.
+- For the configuration UI, all three cells in a group row share the same container type (configured per row; 3 type selections per shelf).
 - UI must validate:
   - Positive integer start index
   - At least one cabinet defined
-  - Each cabinet contains at least one shelf and each shelf contains at least one container group row
-  - Container types are valid (from type set)
+  - Container type is set for all 3 group rows of every shelf of every cabinet
+  - Container types are valid (from type set: PX12, PX6, PX4, PX2)
 
 3. Storage creator — UI behavior and flow
 Add "Storage Init" to the header burger menu. Clicking opens "Storage Master" wizard with three stages:
@@ -43,20 +43,19 @@ Stage 2 — Cabinet & shelf configuration
 - UI elements:
   - Add cabinet (creates new cabinet in wizard state with CabinetIndex starting with 1)
   - Per cabinet:
-    - Add shelf
+    - 4 fixed shelves are automatically shown (no "Add shelf" action needed)
   - Per shelf:
-    - Columns (once selected this number will be applied to each cabinet shelf)
-    - For each container-group-row:
-      - Rows (integer — vertical repetition)
-      - Container type (select from type set)
-    - Preview: computed container counts, slots count, and a visual numbering preview (grid)
+    - Fixed 3×3 grid displayed (3 group rows × 3 group columns)
+    - For each group row (3 per shelf):
+      - Container type (select from type set; applies to all 3 cells in that row)
+    - Preview: computed container counts, section counts, and a visual numbering preview (grid)
     - Save shelf configuration
   - Save cabinet to add another cabinet
 - Buttons:
-  - Move to next step (enabled if ≥ 1 cabinet configured)
+  - Move to next step (enabled if ≥ 1 cabinet configured with all shelves configured)
   - Back, Cancel
 - UI validations:
-  - Columns > 0, rows > 0, container type valid.
+  - Container type must be set for all 3 group rows of each shelf.
   - Show computed totals and per-type counts for user confirmation.
 
 Stage 3 — Initial storage file (optional)
@@ -80,74 +79,80 @@ Accessibility, progress and messages
 4. Configuration model and examples
 
 Definitions:
-- columns (C): number of columns on a shelf (after selection it will be a fixed parameter for whole cabinet).
-- group row (G): a row on the shelf having one container type and a rows count R.
-- rows (R): number of vertical repetitions for that group row.
-- slotsPerCell(T): number of atomic numeric slots assigned to each cell for container type T (see Assumptions mapping).
-- Slots produced by group G on a shelf: C × R × slotsPerCell(T)
+- groupRow (GR): one of the 3 fixed rows in the shelf 3×3 grid (index 1–3).
+- groupColumn (GC): one of the 3 fixed columns in the shelf 3×3 grid (index 1–3).
+- positionRow (PR) / positionColumn (PC): coordinates of a container within its ContainerGroup, determined by the type layout.
+- containersPerGroup(T): total Container records inside a single ContainerGroup for type T.
+- sectionsPerContainer(T): number of Section records created per Container for type T.
 
-Example A — 2 group rows, 2 columns per group, both PX12 (defaults)
-- Shelf:
-  - Columns: 2
-  - Group 1: rows = 3, type = PX12 (slotsPerCell = 4)
-  - Group 2: rows = 3, type = PX12 (slotsPerCell = 4)
-- Total slots = (2 × 3 × 4) + (2 × 3 × 4) = 24 + 24 = 48
-- With startIndex = 1000 the assigned indices will be 1000..1047.
+Container type layout table:
+
+| Type | Layout (PR × PC) | Containers per Group | Sections per Container |
+|------|------------------|----------------------|------------------------|
+| PX12 | 4 × 3            | 12                   | 3                      |
+| PX6  | 2 × 3            | 6                    | 1                      |
+| PX4  | 2 × 2            | 4                    | 1                      |
+| PX2  | 1 × 2            | 2                    | 1                      |
+
+Example A — all 9 groups on one shelf are PX12, startIndex = 1000 (1 cabinet, 1 shelf)
+- Shelf 3×3 grid: all 9 cells are PX12 (12 containers each)
+- Total containers = 9 × 12 = 108 (numbers 1000..1107)
+- Iteration order: GR=1, GC=1 → PR 1..4, PC 1..3 → GC=2 → GC=3 → GR=2 → ... → GR=3, GC=3
 - (A printable numbering preview grid is shown in the UI before initialization.)
 
-Example B — 2 group rows, 3 columns per group, top PX6, bottom PX4
+Example B — shelf with group rows 1 & 2 PX6, group row 3 PX4, startIndex = 1000 (1 cabinet, 1 shelf)
 - Shelf:
-  - Columns: 3
-  - Group 1: rows = 3, type = PX6 (slotsPerCell = 2)
-  - Group 2: rows = 2, type = PX4 (slotsPerCell = 2)
-- Total slots:
-  - Group 1 = 3 × 3 × 2 = 18 (1000..1017)
-  - Group 2 = 3 × 2 × 2 = 12 (1018..1029)
-- Final indices 1000..1029.
+  - Group rows 1 and 2: all 3 cells PX6 (6 containers per group)
+  - Group row 3: all 3 cells PX4 (4 containers per group)
+- Containers from rows 1 & 2: 6 groups × 6 = 36 (1000..1035)
+- Containers from row 3: 3 groups × 4 = 12 (1036..1047)
+- Total: 48 containers (1000..1047)
 
 IMPORTANT: The UI must present the numbering preview (grid) and let the user confirm before DB creation.
 
-5. Container (slot) numbering algorithm — deterministic
+5. Container numbering algorithm — deterministic
 
 Inputs:
 - startIndex (integer)
-- cabinets[] (ordered)
-- for each cabinet: shelves[] (ordered)
-- for each shelf: columns C, groupRows[] (ordered)
-- for each groupRow: rows R, containerType T
-- slotsPerCell(T) (assumed or configured)
+- cabinets[] (ordered, each with a cabinet index 1..N)
+- for each cabinet: 4 fixed shelves (index 1..4)
+- for each shelf: 9 fixed ContainerGroups in 3×3 grid (groupRow 1..3, groupColumn 1..3)
+- for each ContainerGroup: containerType T (determines layout PR_max × PC_max)
+- layout(T): positionRow range 1..PR_max, positionColumn range 1..PC_max (see type layout table)
 
 Algorithm (ordered deterministic iteration)
-1. currentIndex ← startIndex
-2. For each cabinet in creation order:
-   For each shelf in creation order:
-     For each groupRow (in order added):
-       multiplier ← slotsPerCell(T)
-       For rowIndex from 0 to R - 1:         // top → bottom within this group row
-         For colIndex from 0 to C - 1:       // left → right across columns
-           For slotOffset from 0 to multiplier - 1:
-             assign ContainerIndex = currentIndex
+1. currentNumber ← startIndex
+2. For each cabinet (in order, index 1..N):
+   For each shelf (index 1 to 4):
+     For each groupRow (index 1 to 3):
+       For each groupColumn (index 1 to 3):
+         T ← containerType of this ContainerGroup
+         For positionRow from 1 to layout(T).rows:         // top → bottom within group
+           For positionColumn from 1 to layout(T).columns: // left → right within group
+             assign Container.Number = currentNumber
              persist mapping:
-               (Cabinet, Shelf, GroupRowIndex, rowIndex, colIndex, slotOffset) → ContainerIndex
-             currentIndex ← currentIndex + 1
+               (Cabinet, Shelf, GroupRow, GroupColumn, PositionRow, PositionColumn) → Number
+             currentNumber ← currentNumber + 1
 
 Outputs:
-- A complete list of numeric indices (ContainerIndex) assigned to slots.
-- Container records and Section records will reference these indices per the DB model.
+- A complete ordered list of Container.Number values assigned to physical containers.
+- Each Container record references its ContainerGroup and stores its full Location coordinates.
 
 Notes:
-- The UI preview must render the grid from the same algorithm (groupRow order → row → column → slot).
-- Container record vs slot:
-  - Implementation must decide if a DB "Container" maps to a physical cell (one per column×row) and "Section" or "Slot" maps to numeric ContainerIndex; or if Container table stores each slot directly. The prompt requires the agent to follow the numbering algorithm for atomic indices regardless of DB table mapping — map indices to DB schema consistently.
+- The UI preview must render the grid from the same algorithm (groupRow → groupColumn → positionRow → positionColumn).
+- DB mapping: one Container record per physical position in a group (not per section). Sections are sub-records of a Container.
 
 6. Database initialization (DB writes and transactional behavior)
 
 On "Initialize store":
-- Create ContainerGroup records for each group row with: CabinetId, ShelfId, GroupRowIndex, Columns, ContainerType, Rows, SlotsPerCell, Count (computed).
-- Create Container (or Slot) records for each assigned numeric ContainerIndex with fields:
-  - ContainerIndex, ContainerType, ContainerGroupId, CabinetId, ShelfId, ColumnIndex, RowIndexWithinGroup, SlotOffset
-- Create default Section records for each Container or per design decision:
-  - Default: create N sections per Container (configurable; suggested default: 1 section per slot).
+- Create ContainerGroup records for each cell in the 3×3 grid of each shelf with fields:
+  - Id (auto-generated), Type, Cabinet, Shelf, GroupRow, GroupColumn
+- Create Container records for each physical container in each ContainerGroup with fields:
+  - Id (auto-generated), Number, Type, ContainerGroupId
+  - Location (owned value object): Cabinet, Shelf, GroupRow, GroupColumn, PositionRow, PositionColumn
+- Create Section records for each Container:
+  - PX12: 3 sections per container (Index 1, 2, 3)
+  - PX6, PX4, PX2: 1 section per container (Index 1)
 - DB writes must be batched (configurable batch size). Each batch commit is transactional: commit or rollback.
 - After each batch commit, persist the updated .bsx file (if processing a file) and record progress.
 
@@ -165,7 +170,7 @@ Selection criteria:
 Processing steps for each matching Item node:
 1. Extract containerNumber, Qty (number), ItemID, LotID.
 2. DB actions (in a per-batch transaction):
-   - Upsert Lot record: ensure Lot.Id = LotID and Lot.ItemId = ItemID (if mismatch, log warning).
+   - Upsert Lot record: use the bsx LotID value directly as the Lot.Id primary key (Lot.Id is an external BrickLink identifier, e.g. 432075602, not an auto-generated surrogate). Because the Lot table uses IDENTITY by default, the implementation MUST enable explicit Lot.Id insertion for this flow (e.g. SET IDENTITY_INSERT Lots ON / OFF around the insert, or reconfigure the EF entity to remove ValueGeneratedOnAdd). Ensure no collision with any pre-existing auto-generated Lot.Id values before insertion. Ensure Lot.ItemId = ItemID (if ID already exists with a different ItemId, log warning and skip).
    - Find a Section within the container referenced by containerNumber to assign the Lot:
      - Prefer an empty Section (no Lot assigned).
      - If all sections occupied, select the section with highest Index (last section) in that container.
@@ -211,26 +216,43 @@ Idempotency:
   - Show number of successful nodes, number of failed nodes, link to log and instructions to re-run processing.
 
 10. Acceptance criteria / test cases
-- UI validation: blocks invalid fields (empty storage name, non-positive startIndex, no cabinet).
+- UI validation: blocks invalid fields (non-positive startIndex, no cabinet, missing container type for any group row).
 - Numbering: given configuration and startIndex, preview exactly matches DB records after initialization.
 - .bsx processing: matching Item nodes converted to Lot/LotSections and <Processed>true</Processed> is added after batch commit.
 - Idempotency: re-running does not duplicate data and skips processed nodes.
 - Batch resiliency: process resumes from first unprocessed node after interruption.
 
-11. Implementation questions (must resolve before run)
-- Confirm slotsPerCell mapping for all container types (default mapping provided above).
-- Decide the DB schema mapping for Container vs Slot vs Section (one-to-one or two-layer).
-- Default number of Sections per container (if not equal to slots-per-cell).
-- Quantity type: integer-only or allow fractional quantities.
-- Upsert policy: merge quantities or create separate LotSections history records?
+11. Implementation notes (resolved by domain)
+- Container type layout and containers per group: PX12=12 (4×3), PX6=6 (2×3), PX4=4 (2×2), PX2=2 (1×2). Each position in the type layout corresponds to one Container record (no slotsPerCell multiplier).
+- DB schema: Container = one physical container in a group cell; Section = subdivision of a Container. Container.Number is the sequential identifier assigned per the numbering algorithm.
+- Sections per container: determined by type — PX12 creates 3 sections (index 1–3), all other types create 1 section (index 1). This is enforced in Container.InitializeSections() and is not configurable.
+- Quantity type: integer-only. LotSection.Quantity is int.
+- Upsert policy: merge quantities (add Qty to existing LotSection.Quantity). Record an audit log entry for each update.
+- bsx LotID: Large external BrickLink identifier (e.g., 432075602). Used as the Lot.Id primary key. The domain's Lot.Id is currently auto-generated (IDENTITY), so explicit insertion must be enabled (e.g., SET IDENTITY_INSERT or reconfiguring ValueGeneratedOnAdd for the initialization flow). Ensure no collision with existing auto-generated Lot.Id values.
 
 12. Agent instructions (how an automated agent should proceed)
-1. Validate inputs (storage name, startIndex, cabinet/shelf config, container types).
+1. Validate inputs (startIndex, cabinet count, container types for all group rows on all shelves).
 2. Present a numbering preview (grid) from the algorithm; require user confirmation before DB writes.
-3. Create DB ContainerGroup, Container/Slot and Section records in batches (transactional per batch).
+3. Create DB ContainerGroup, Container, and Section records in batches (transactional per batch).
 4. If file provided: parse .bsx, locate matching Item nodes, process batches as described and persist <Processed>true</Processed> after each successful batch commit.
 5. Maintain and write a processing log file.
 6. On error, rollback batch, record detailed log entries and present an actionable error.
 7. Produce final summary report and UI popup.
 
 Appendix — Small pseudocode sample (reference)
+
+13. Required implementation constraints
+
+The following constraints were identified as tricky parts during requirements review. Each must be explicitly handled by the implementing agent.
+
+**Tricky part 1 — Container counts use type layout, not slotsPerCell multiplier**
+- Required: Do not use a "slotsPerCell" multiplier when computing the number of Container records per group. Instead, use the type layout table directly: the number of containers per ContainerGroup equals `positionRows × positionColumns` per the layout for that type (PX12=12, PX6=6, PX4=4, PX2=2). Each position in the grid corresponds to exactly one Container record.
+
+**Tricky part 2 — bsx LotID must be used as Lot.Id primary key (explicit identity insertion required)**
+- Required: The `LotID` in a bsx `<Item>` node is a large external BrickLink identifier (e.g. `432075602`). It must be persisted as the `Lot.Id` primary key value, not as a separate external reference field. Because the `Lots` table uses an SQL Server IDENTITY column by default, the implementation must explicitly enable identity insertion for this flow (e.g. `SET IDENTITY_INSERT Lots ON` before insert and `OFF` after, or reconfigure the entity mapping to remove `ValueGeneratedOnAdd`). Before inserting, verify no existing Lot.Id conflicts.
+
+**Tricky part 3 — No Storage entity exists; hierarchy starts at Cabinet**
+- Required: Do not introduce or expect a `Storage` entity or "storage name" field. The domain hierarchy is: Cabinet → Shelf → ContainerGroup → Container → Section. The wizard must not present a "storage name" input. Validation must not reference a storage name.
+
+**Tricky part 4 — Section count per container is determined by type and is not configurable**
+- Required: Do not make the number of sections per container configurable at runtime. Section counts are fixed per container type and enforced by `Container.InitializeSections()`: PX12 → 3 sections (Index 1, 2, 3); PX6, PX4, PX2 → 1 section (Index 1). The implementation must call `InitializeSections()` and must not override or bypass its logic.
