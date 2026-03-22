@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { ContainerDto } from './storageSlice';
+import type { ContainerDto, StorageInitializationRequest } from './storageSlice';
 
 export const storageApi = createApi({
   reducerPath: 'storageApi',
@@ -11,7 +11,25 @@ export const storageApi = createApi({
     getCabinetContainers: builder.query<ContainerDto[], number>({
       query: (cabinetNumber) => `/cabinets/${cabinetNumber}/containers`,
     }),
+    initializeStorage: builder.mutation<
+      {
+        containersCreated: number;
+        sectionsCreated: number;
+        containersByType: Record<string, number>;
+      },
+      StorageInitializationRequest
+    >({
+      query: (body) => ({
+        url: '/init',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetCabinetsQuery, useGetCabinetContainersQuery } = storageApi;
+export const {
+  useGetCabinetsQuery,
+  useGetCabinetContainersQuery,
+  useInitializeStorageMutation,
+} = storageApi;

@@ -19,4 +19,20 @@ public class ContainerGroup(ContainerType type, int cabinet, int shelf, int grou
     public int GroupColumn { get; private set; } = groupColumn;
 
     public IReadOnlyCollection<Container> Containers => _containers;
+
+    public void AddContainer(Container container)
+    {
+        ArgumentNullException.ThrowIfNull(container);
+
+        if (container.Type != Type)
+            throw new InvalidOperationException("Container type must match container group type.");
+
+        if (container.Location.Cabinet != Cabinet ||
+            container.Location.Shelf != Shelf ||
+            container.Location.GroupRow != GroupRow ||
+            container.Location.GroupColumn != GroupColumn)
+            throw new InvalidOperationException("Container location must match container group coordinates.");
+
+        _containers.Add(container);
+    }
 }

@@ -2,6 +2,32 @@
 
 ---
 
+### 2026-03-22 — GitHub Copilot (GPT-4.1)
+
+**Full Prompt:**
+
+```
+# Storage initialization feature implementation.
+
+## Instructions
+
+- Follow the rules defined in:
+  * `Documents/Copilot/copilot_instructions.md`
+  * `Documents/Design Documents/domain_requirements.md`
+
+- Read the UI requirements from `Documents\Design documents\ui_basic_storage_representation_requirements.md`  implement described feature
+- Update domain requirements if it needed `Documents/Design Documents/domain_requirements.md`
+
+## Documentation
+- Add a detailed explanation of the finished work as the PR description
+- Record the full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
+- Include:
+  * Date
+  * Used AI model
+```
+
+---
+
 ### 2026-03-21 — GitHub Copilot (Claude Sonnet)
 
 **Full Prompt:**

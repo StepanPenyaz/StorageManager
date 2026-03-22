@@ -16,6 +16,25 @@ interface StorageState {
   selectedCabinet: number | null;
 }
 
+export type ContainerTypeOption = 'PX12' | 'PX6' | 'PX4' | 'PX2';
+
+export interface ShelfConfig {
+  shelfIndex: number;
+  rowTypes: ContainerTypeOption[];
+}
+
+export interface CabinetConfig {
+  cabinetIndex: number;
+  shelves: ShelfConfig[];
+}
+
+export interface StorageInitializationRequest {
+  startIndex: number;
+  cabinets: CabinetConfig[];
+  bsxFileName?: string;
+  bsxFileContentBase64?: string | null;
+}
+
 const initialState: StorageState = {
   selectedCabinet: null,
 };

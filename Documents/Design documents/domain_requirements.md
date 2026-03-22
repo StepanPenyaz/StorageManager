@@ -11,9 +11,8 @@ The system is designed to manage physical storage organized into cabinets, shelv
 
 ### 2.1 Storage Structure
 
-The storage is logically organized as:
+The storage system is organized directly by cabinets; there is no persisted `Storage` aggregate or name.
 
-- A **Storage** contains multiple **Cabinets**
 - Each **Cabinet** contains **4 Shelves**
 - Each **Shelf** contains **9 Container Groups** (3 × 3 grid)
 - Each **Container Group** contains containers of a single type
@@ -49,7 +48,7 @@ A **Container** is the basic storage unit.
 
 Properties:
 - Unique identifier
-- Sequential number (starting from `1000`)
+- Sequential number (starting from a configurable index, default `1000`)
 - Type (`PX12`, `PX6`, etc.)
 - Physical location (cabinet, shelf, position)
 - Contains one or more **Sections**

@@ -15,6 +15,7 @@ builder.Services.AddDbContext<StorageContext>(options =>
 
 builder.Services.AddScoped<IStorageRepository, StorageRepository>();
 builder.Services.AddScoped<IStorageViewService, StorageViewService>();
+builder.Services.AddScoped<IStorageInitializationService, StorageInitializationService>();
 
 var app = builder.Build();
 
