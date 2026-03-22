@@ -54,3 +54,23 @@ Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope 
 - Record full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
 - Include: Date, Used AI model
 ```
+
+---
+
+### 2026-03-22 — GitHub Copilot (Claude Sonnet 4.5)
+
+**Full Prompt:**
+
+```
+# Copilot Prompt: Generate Data Seed script
+
+## Instructions
+
+- Follow rules defined in:
+  - `Documents/Design documents/data_seed_requirements.md`
+
+## Documentation
+
+- Record full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
+- Include: Date, Used AI model
+```
