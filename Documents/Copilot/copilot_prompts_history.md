@@ -153,3 +153,33 @@ Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope 
 ```
 
 ---
+
+### 2026-03-22 — GitHub Copilot (Claude Sonnet 4.5)
+
+**Full Prompt:**
+
+```
+# Prompt Check Task
+
+## Instructions
+
+* Follow the rules defined in:
+  * `Documents/Copilot/copilot_instructions.md`
+  * `Documents/Design Documents/domain_requirements.md`
+* Read the feature requirements from `Documents/Design Documents/storage_init_requirements.md`
+* Check the existing project and update the `Documents/Design Documents/storage_init_requirements.md` document to match existing domain restrictions and logic
+* Write a list of tricky parts in the PR description
+* Do **not** create any code
+
+---
+
+## Documentation
+
+* Add a detailed explanation of the finished work as the PR description
+* Record the full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
+* Include:
+  * Date
+  * Used AI model
+```
+
+---
