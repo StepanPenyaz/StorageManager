@@ -1,0 +1,28 @@
+.shelf {
+  border: 2px solid #4a9eff;
+  border-radius: 4px;
+  padding: 12px;
+  background-color: #0d1b2a;
+}
+
+.shelfLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8888aa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

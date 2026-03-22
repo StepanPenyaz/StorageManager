@@ -1,0 +1,25 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0f1a;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-width: 1920px;
+}
+
+.appLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 1080px;
+  min-width: 1920px;
+}
+
+.loadingMessage {
+  padding: 40px 32px;
+  color: #8888aa;
+  font-size: 16px;
+}
