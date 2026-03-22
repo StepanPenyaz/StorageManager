@@ -95,3 +95,33 @@ Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope 
 - Record full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
 - Include: Date, Used AI model
 ```
+
+---
+
+### 2026-03-22 — GitHub Copilot (Claude Sonnet 4.5)
+
+**Full Prompt:**
+
+```
+# WEB API generation using existing domain logic and UI requirements as a reference.
+
+## Instructions
+
+- Follow the rules defined in:
+  * `Documents/Copilot/copilot_instructions.md`
+  * `Documents/Design Documents/domain_requirements.md`
+
+- Read the UI requirements from `Documents/Design Documents/ui_basic_storage_representation_requirements.md` and prepare a Web API layer
+- Create a separate API project using existing projects as a reference in the `Backend/Storage` folder
+- Do **not** create a UI at this stage
+
+---
+
+## Documentation
+- Add a detailed explanation of the finished work as the PR description
+- Record the full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
+- Include:
+  * Date
+  * Used AI model
+```
+
