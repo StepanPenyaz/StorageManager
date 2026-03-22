@@ -8,6 +8,10 @@ public interface IStorageRepository
 
     Task<Container?> GetContainerByNumberAsync(int containerNumber);
 
+    Task<IReadOnlyCollection<int>> GetCabinetNumbersAsync();
+
+    Task<IReadOnlyCollection<Container>> GetContainersByCabinetAsync(int cabinetNumber);
+
     void RemoveLotSection(LotSection lotSection);
 
     Task SaveChangesAsync();
