@@ -203,7 +203,7 @@ export function StorageInitWizard({ onClose }: Props) {
     <div className={styles.overlay}>
       <div className={styles.wizard}>
         <div className={styles.wizardHeader}>
-          <h2>Storage Master</h2>
+          <h2>Storage Initialization</h2>
           <button className={styles.closeButton} onClick={onClose}>
             ✕
           </button>
@@ -370,7 +370,7 @@ export function StorageInitWizard({ onClose }: Props) {
                 disabled={!cabinetIsValid || isLoading}
                 onClick={handleInitialize}
               >
-                {isLoading ? 'Initializing…' : 'Initialize store'}
+                {isLoading ? 'Initializing…' : 'Initialize Storage'}
               </button>
             )}
           </div>

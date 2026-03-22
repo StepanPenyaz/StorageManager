@@ -26,7 +26,7 @@ public class StorageInitializationController(IStorageInitializationService initi
         }
         catch (Exception ex) when (ex is ArgumentOutOfRangeException or InvalidOperationException)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { error = "Invalid storage initialization request.", detail = ex.Message });
         }
     }
 
