@@ -1,0 +1,21 @@
+# docker-compose.override.example.yml
+# Copy this file to docker-compose.override.yml and adjust values as needed.
+# This file overrides settings from docker-compose.yml for local customization.
+#
+# Examples of values you may want to change:
+
+services:
+  db:
+    environment:
+      # Use a stronger password and update the api connection string to match.
+      SA_PASSWORD: "Replace_with_your_password!"
+
+  api:
+    environment:
+      # Update this if you changed SA_PASSWORD above.
+      ConnectionStrings__StorageDatabase: "Server=db,1433;Database=StorageManager;User Id=sa;Password=Replace_with_your_password!;TrustServerCertificate=true;Encrypt=false"
+
+  frontend:
+    ports:
+      # Change the host port if 3000 is already in use on your machine.
+      - "3001:80"
