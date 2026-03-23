@@ -2,6 +2,27 @@
 
 ---
 
+### 2026-03-22 — GitHub Copilot (Claude Sonnet 4.5)
+
+**Full Prompt:**
+
+```
+# Local hosting
+
+## Instructions
+
+- Follow rules defined in:
+  - `Documents\Design documents\local_env_requirements.md`
+- Add a section `Local run` with detailed plan how to run this project to Readme.md
+
+## Documentation
+
+- Record full prompt text in: `Documents/Copilot/copilot_prompts_history.md`
+- Include: Date, Used AI model
+```
+
+---
+
 ### 2026-03-22 — GitHub Copilot (GPT-4.1)
 
 **Full Prompt:**
