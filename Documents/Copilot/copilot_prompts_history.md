@@ -7,6 +7,30 @@
 **Full Prompt:**
 
 ```
+# Bug List #1
+
+## Instructions
+
+* Implement `Documents\Design documents\list_for_fix.md` requirements
+
+---
+
+## Documentation
+
+* Record this request in: `Documents/Copilot/copilot_prompts_history.md`
+* Include:
+
+  * Date
+  * Used AI model
+```
+
+---
+
+### 2026-03-23 — GitHub Copilot (Claude Sonnet 4.5)
+
+**Full Prompt:**
+
+```
 # UI Improvements part 3
 
 ## Instructions
