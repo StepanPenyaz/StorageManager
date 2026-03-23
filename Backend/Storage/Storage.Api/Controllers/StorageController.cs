@@ -6,7 +6,10 @@ namespace Storage.Api.Controllers;
 
 [ApiController]
 [Route("api/storage")]
-public class StorageController(IStorageViewService storageViewService) : ControllerBase
+public class StorageController(
+    IStorageViewService storageViewService,
+    IOrderProcessingService orderProcessingService,
+    IStorageUpdateProcessingService storageUpdateProcessingService) : ControllerBase
 {
     [HttpGet("cabinets")]
     public async Task<IActionResult> GetCabinets() =>
@@ -34,5 +37,51 @@ public class StorageController(IStorageViewService storageViewService) : Control
                 TotalSections = c.TotalSections,
                 EmptySections = c.EmptySections
             }));
+    }
+
+    [HttpPost("orders/process")]
+    public async Task<IActionResult> ProcessOrders([FromBody] ProcessOrdersRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.IncomingOrdersFolder))
+            return BadRequest("Incoming orders folder path is required.");
+
+        if (string.IsNullOrWhiteSpace(request.ProcessedOrdersFolder))
+            return BadRequest("Processed orders folder path is required.");
+
+        var result = await orderProcessingService.ProcessOrdersAsync(
+            request.IncomingOrdersFolder,
+            request.ProcessedOrdersFolder);
+
+        return Ok(new ProcessingResultDto
+        {
+            FilesProcessed = result.FilesProcessed,
+            ItemsProcessed = result.ItemsProcessed,
+            WarningCount = result.WarningCount,
+            ErrorCount = result.ErrorCount,
+            Warnings = result.Warnings
+        });
+    }
+
+    [HttpPost("updates/process")]
+    public async Task<IActionResult> ProcessStorageUpdates([FromBody] ProcessStorageUpdatesRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.IncomingStorageUpdatesFolder))
+            return BadRequest("Incoming storage updates folder path is required.");
+
+        if (string.IsNullOrWhiteSpace(request.ProcessedStorageUpdatesFolder))
+            return BadRequest("Processed storage updates folder path is required.");
+
+        var result = await storageUpdateProcessingService.ProcessStorageUpdatesAsync(
+            request.IncomingStorageUpdatesFolder,
+            request.ProcessedStorageUpdatesFolder);
+
+        return Ok(new ProcessingResultDto
+        {
+            FilesProcessed = result.FilesProcessed,
+            ItemsProcessed = result.ItemsProcessed,
+            WarningCount = result.WarningCount,
+            ErrorCount = result.ErrorCount,
+            Warnings = result.Warnings
+        });
     }
 }

@@ -5,6 +5,9 @@ import type {
   BsxFileProcessingRequest,
   BsxFileProcessingResult,
   ContainerDto,
+  ProcessingResult,
+  ProcessOrdersRequest,
+  ProcessStorageUpdatesRequest,
   StorageInitializationRequest,
 } from './storageSlice';
 
@@ -49,6 +52,20 @@ export const storageApi = createApi({
         body,
       }),
     }),
+    processOrders: builder.mutation<ProcessingResult, ProcessOrdersRequest>({
+      query: (body) => ({
+        url: '/orders/process',
+        method: 'POST',
+        body,
+      }),
+    }),
+    processStorageUpdates: builder.mutation<ProcessingResult, ProcessStorageUpdatesRequest>({
+      query: (body) => ({
+        url: '/updates/process',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
@@ -58,4 +75,6 @@ export const {
   useGetBsxFileMetadataMutation,
   useInitializeStorageMutation,
   useProcessStorageInitializationFileMutation,
+  useProcessOrdersMutation,
+  useProcessStorageUpdatesMutation,
 } = storageApi;

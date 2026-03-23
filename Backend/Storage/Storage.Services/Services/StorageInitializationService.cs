@@ -136,7 +136,7 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
             var batchNumber = (batchIndex / batchSize) + 1;
             var batch = matchingItems.Skip(batchIndex).Take(batchSize).ToList();
             var containerCache = new Dictionary<int, Container?>();
-            var ensuredLots = new Dictionary<int, int>();
+            var ensuredLots = new Dictionary<int, string>();
 
             await using var transaction = await context.Database.BeginTransactionAsync();
 
@@ -311,7 +311,8 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
             return false;
         }
 
-        if (!int.TryParse((string?)item.Element("ItemID"), out var itemId))
+        var itemId = (string?)item.Element("ItemID");
+        if (string.IsNullOrWhiteSpace(itemId))
         {
             warning = $"Container #{containerNumber} has an item with an invalid or missing ItemID.";
             return false;
@@ -364,10 +365,10 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
             lotSection.LotId == lotId && lotSection.SectionId == sectionId);
     }
 
-    private async Task<LotEnsureResult> EnsureLotExistsAsync(int lotId, int itemId, IDictionary<int, int> ensuredLots)
+    private async Task<LotEnsureResult> EnsureLotExistsAsync(int lotId, string itemId, IDictionary<int, string> ensuredLots)
     {
         if (ensuredLots.TryGetValue(lotId, out var ensuredItemId))
-            return ensuredItemId == itemId ? LotEnsureResult.Exists : LotEnsureResult.ItemMismatch;
+            return string.Equals(ensuredItemId, itemId, StringComparison.Ordinal) ? LotEnsureResult.Exists : LotEnsureResult.ItemMismatch;
 
         var existingLot = await context.Lots
             .AsNoTracking()
@@ -376,7 +377,7 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
         if (existingLot is not null)
         {
             ensuredLots[lotId] = existingLot.ItemId;
-            return existingLot.ItemId == itemId ? LotEnsureResult.Exists : LotEnsureResult.ItemMismatch;
+            return string.Equals(existingLot.ItemId, itemId, StringComparison.Ordinal) ? LotEnsureResult.Exists : LotEnsureResult.ItemMismatch;
         }
 
         await context.Database.ExecuteSqlInterpolatedAsync($@"
@@ -420,7 +421,7 @@ SET IDENTITY_INSERT [dbo].[Lots] OFF;");
             containersByType[type] = count + 1;
     }
 
-    private readonly record struct ParsedBsxItem(int ContainerNumber, int LotId, int ItemId, int Quantity);
+    private readonly record struct ParsedBsxItem(int ContainerNumber, int LotId, string ItemId, int Quantity);
 
     private enum LotEnsureResult
     {

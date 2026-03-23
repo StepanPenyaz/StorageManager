@@ -29,6 +29,10 @@ builder.Services.AddDbContext<StorageContext>(options =>
 builder.Services.AddScoped<IStorageRepository, StorageRepository>();
 builder.Services.AddScoped<IStorageViewService, StorageViewService>();
 builder.Services.AddScoped<IStorageInitializationService, StorageInitializationService>();
+builder.Services.AddScoped<IOrderFileParser, OrderFileParser>();
+builder.Services.AddScoped<IOrderProcessingService, OrderProcessingService>();
+builder.Services.AddScoped<IStorageUpdateFileParser, StorageUpdateFileParser>();
+builder.Services.AddScoped<IStorageUpdateProcessingService, StorageUpdateProcessingService>();
 
 var app = builder.Build();
 

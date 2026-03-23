@@ -11,11 +11,21 @@ body {
   min-width: 1920px;
 }
 
+body[data-theme="light"] {
+  background-color: #f0f2ff;
+  color: #1a237e;
+}
+
 .appLayout {
   display: flex;
   flex-direction: column;
   min-height: 1080px;
   min-width: 1920px;
+}
+
+.appLayoutLight {
+  background-color: #f0f2ff;
+  color: #1a237e;
 }
 
 .loadingMessage {

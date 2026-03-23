@@ -1,6 +1,8 @@
+using Storage.Services.Models;
+
 namespace Storage.Services.Interfaces;
 
 public interface IOrderProcessingService
 {
-    Task ProcessOrdersAsync();
+    Task<OrderProcessingResult> ProcessOrdersAsync(string inputDirectory, string finishedDirectory);
 }
