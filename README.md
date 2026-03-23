@@ -48,3 +48,23 @@ npm run dev
 The application will be available at `http://localhost:5173`.
 
 > The Vite development server automatically proxies all `/api` requests to the backend at `http://localhost:5000`.
+
+### 4. CORS in local development
+
+The backend registers a `LocalDev` CORS policy that allows the Vite dev-server origin `http://localhost:5173` with credentials. This policy is intentionally scoped to `localhost` only and must **not** be used in production.
+
+If you call the API directly (bypassing the Vite proxy), use `https://localhost:52515` as the base URL so the HTTPS redirect does not break preflight. OPTIONS preflight requests are short-circuited before the HTTPS redirect, so they always return `204 No Content` with the correct CORS headers.
+
+**Verify preflight with curl:**
+
+```bash
+curl -i -X OPTIONS "https://localhost:52515/api/storage/init" \
+  -H "Origin: http://localhost:5173" \
+  -H "Access-Control-Request-Method: POST" \
+  --insecure
+```
+
+Expected response headers:
+- `HTTP/1.1 204 No Content`
+- `Access-Control-Allow-Origin: http://localhost:5173`
+- `Access-Control-Allow-Credentials: true`
