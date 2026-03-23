@@ -12,6 +12,11 @@
 ## Instructions
 
 * Implement `Documents\Design documents\copilot_context_build.md` requirements
+# Local Deployment (Demo) Requirements
+
+## Instructions
+
+* Implement `Documents\Design documents\local_env_requirements_docker.md` requirements
 
 ---
 
