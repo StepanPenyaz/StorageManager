@@ -56,3 +56,4 @@ Provide a minimal, easy-to-run local demo of StorageManager using Docker Compose
 ## Notes
 - This is strictly for demo/local development. Security best practices and production hardening are out-of-scope.
 - Use simple example values for secrets while testing locally; do not commit real secrets.
+- Add `## Local run Docker` section to `README.md` file with step-by-step guide to run env using Docker
