@@ -238,28 +238,38 @@ export function StorageInitWizard({ onClose }: Props) {
     await initialize(toRequest());
   };
 
-  const renderGroupGrid = (groups: GroupPreview[], groupColumnsCount: number) => {
+  const renderGroupTable = (groups: GroupPreview[]) => {
     const sorted = [...groups].sort((a, b) =>
       a.groupRow !== b.groupRow ? a.groupRow - b.groupRow : a.groupColumn - b.groupColumn,
     );
 
+    const maxContainers = Math.max(...groups.map((g) => g.end - g.start + 1));
+
     return (
-      <div
-        className={styles.groupGrid}
-        style={{ gridTemplateColumns: `repeat(${groupColumnsCount}, minmax(0, 1fr))` }}
-      >
-        {sorted.map((group) => (
-          <div key={`${group.groupRow}-${group.groupColumn}`} className={styles.groupCell}>
-            <div className={styles.groupHeader}>
-              Row {group.groupRow} · Col {group.groupColumn}
-            </div>
-            <div className={styles.groupType}>{group.type}</div>
-            <div className={styles.groupRange}>
-              #{group.start} – #{group.end}
-            </div>
-          </div>
-        ))}
-      </div>
+      <table className={styles.shelfTable}>
+        <tbody>
+          {sorted.map((group) => {
+            const showType = (group.groupColumn - 1) % layoutMap[group.type].sections === 0;
+            const count = group.end - group.start + 1;
+            const numbers = Array.from({ length: count }, (_, i) => group.start + i);
+            const padCount = maxContainers - count;
+
+            return (
+              <tr key={`${group.groupRow}-${group.groupColumn}`}>
+                <td className={styles.typeCell}>{showType ? group.type : ''}</td>
+                {numbers.map((num) => (
+                  <td key={num} className={styles.numberCell}>
+                    {num}
+                  </td>
+                ))}
+                {Array.from({ length: padCount }, (_, i) => (
+                  <td key={`pad-${i}`} className={styles.emptyCell} />
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     );
   };
 
@@ -274,6 +284,12 @@ export function StorageInitWizard({ onClose }: Props) {
         </div>
 
         <div className={styles.steps}>Step {step} of 3</div>
+
+        {error && (
+          <div className={styles.errorBar}>
+            {(error as { data?: string })?.data ?? 'Initialization failed.'}
+          </div>
+        )}
 
         {step === 1 && (
           <div className={styles.stepContent}>
@@ -421,32 +437,22 @@ export function StorageInitWizard({ onClose }: Props) {
               {bsxFile && <div className={styles.helper}>{bsxFile.name}</div>}
             </div>
 
-            {preview.cabinets.map((cabinet) => {
-              const wizardCabinet = cabinets.find((c) => c.cabinetIndex === cabinet.cabinetIndex);
-              if (!wizardCabinet) return null;
-              return (
-                <div key={cabinet.cabinetIndex} className={styles.previewCard}>
-                  <div className={styles.previewHeader}>Cabinet {cabinet.cabinetIndex}</div>
-                  {cabinet.shelves.map((shelf) => (
-                    <div key={shelf.shelfIndex} className={styles.shelfPreview}>
-                      <div className={styles.shelfTitle}>Shelf {shelf.shelfIndex}</div>
-                      {renderGroupGrid(shelf.groups, wizardCabinet.groupColumnsCount)}
-                    </div>
-                  ))}
-                </div>
-              );
-            })}
+            {preview.cabinets.map((cabinet) => (
+              <div key={cabinet.cabinetIndex} className={styles.previewCard}>
+                <div className={styles.previewHeader}>Cabinet {cabinet.cabinetIndex}</div>
+                {cabinet.shelves.map((shelf) => (
+                  <div key={shelf.shelfIndex} className={styles.shelfPreview}>
+                    <div className={styles.shelfTitle}>Shelf {shelf.shelfIndex}</div>
+                    {renderGroupTable(shelf.groups)}
+                  </div>
+                ))}
+              </div>
+            ))}
 
             {isSuccess && (
               <div className={styles.successMessage}>
                 Initialization completed. Containers created: {data?.containersCreated}. Sections
                 created: {data?.sectionsCreated}.
-              </div>
-            )}
-
-            {error && (
-              <div className={styles.errorMessage}>
-                {(error as { data?: string })?.data ?? 'Initialization failed.'}
               </div>
             )}
           </div>
