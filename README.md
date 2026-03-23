@@ -149,14 +149,28 @@ StorageManager/
 
 ### Storage View
 
-The main screen displays all cabinets and their containers grouped by type. Each container shows its number, type, and section occupancy.
+The main screen displays all cabinets and their containers grouped by type. Each container is colour-coded by occupancy (green = has empty sections, red = fully occupied).
+
+![Storage View](https://github.com/user-attachments/assets/87ca4a76-8eee-4fd3-9768-63d90bf7b882)
+
+### Configuration Sidebar
+
+The hamburger menu opens a configuration panel with shortcuts to Storage Initialization, directory settings for file processing, and a light/dark theme toggle.
+
+![Configuration Sidebar](https://github.com/user-attachments/assets/d711d069-af32-4540-ae74-91430a7e5df6)
 
 ### Storage Initialization Wizard
 
 A 4-step wizard guides the user through:
 
 1. **Initial settings** — configure the container number starting index.
+
+   ![Wizard Step 1 – Initial Settings](https://github.com/user-attachments/assets/0844905c-f7a9-42ef-9ed4-382637d0e76b)
+
 2. **Cabinet and shelf configuration** — define cabinet count, shelf layout, and container group row types.
+
+   ![Wizard Step 2 – Cabinet Configuration](https://github.com/user-attachments/assets/4e54b14a-69be-4d20-9286-8808cfb3ef07)
+
 3. **Initialization preview and execution** — review generated container numbering and create the storage structure.
 4. **BSX file processing** — import initial inventory lots from a `.bsx` file.
 
