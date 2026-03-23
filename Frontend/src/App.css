@@ -8,7 +8,6 @@ body {
   background-color: #0a0f1a;
   color: #e0e0e0;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  min-width: 1920px;
 }
 
 body[data-theme="light"] {
@@ -19,8 +18,7 @@ body[data-theme="light"] {
 .appLayout {
   display: flex;
   flex-direction: column;
-  min-height: 1080px;
-  min-width: 1920px;
+  min-height: 100vh;
 }
 
 .appLayoutLight {

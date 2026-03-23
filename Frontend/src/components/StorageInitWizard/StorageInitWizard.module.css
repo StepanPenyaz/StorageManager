@@ -446,3 +446,39 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.filePickerRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filePickerRow .input {
+  flex: 1;
+}
+
+.filePathInput {
+  flex: 1;
+}
+
+.browseButton {
+  background: #1e3a5f;
+  border: 1px solid #2f5986;
+  border-radius: 8px;
+  color: #e0e0e0;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.browseButton:hover {
+  background: #254d7a;
+}
+
+.hiddenFileInput {
+  display: none;
+}

@@ -7,6 +7,11 @@
 **Full Prompt:**
 
 ```
+# Bug List #1
+
+## Instructions
+
+* Implement `Documents\Design documents\list_for_fix.md` requirements
 # Unit tests + Summary of Phase 1
 
 ## Instructions

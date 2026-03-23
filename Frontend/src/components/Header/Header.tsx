@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../app/store';
 import { toggleTheme } from '../../features/storage/storageSlice';
@@ -15,6 +15,7 @@ export function Header({ onOpenInit }: Props) {
   const theme = useSelector((state: RootState) => state.storage.theme);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dirSettingsOpen, setDirSettingsOpen] = useState(false);
   const [incomingOrdersFolder, setIncomingOrdersFolder] = useState('');
   const [processedOrdersFolder, setProcessedOrdersFolder] = useState('');
   const [incomingUpdatesFolder, setIncomingUpdatesFolder] = useState('');
@@ -24,6 +25,11 @@ export function Header({ onOpenInit }: Props) {
   const [ordersError, setOrdersError] = useState<string | null>(null);
   const [updatesResult, setUpdatesResult] = useState<ProcessingResult | null>(null);
   const [updatesError, setUpdatesError] = useState<string | null>(null);
+
+  const incomingOrdersPickerRef = useRef<HTMLInputElement>(null);
+  const processedOrdersPickerRef = useRef<HTMLInputElement>(null);
+  const incomingUpdatesPickerRef = useRef<HTMLInputElement>(null);
+  const processedUpdatesPickerRef = useRef<HTMLInputElement>(null);
 
   const [processOrders, { isLoading: isProcessingOrders }] = useProcessOrdersMutation();
   const [processStorageUpdates, { isLoading: isProcessingUpdates }] = useProcessStorageUpdatesMutation();
@@ -62,6 +68,28 @@ export function Header({ onOpenInit }: Props) {
     }
   };
 
+  const handleFolderPick = (
+    ref: React.RefObject<HTMLInputElement | null>,
+    setter: (v: string) => void,
+  ) => {
+    if (!ref.current) return;
+    ref.current.onchange = (e) => {
+      const input = e.target as HTMLInputElement;
+      const file = input.files?.[0];
+      if (file) {
+        const fullPath = (file as File & { path?: string }).path;
+        if (fullPath) {
+          const sep = fullPath.includes('\\') ? '\\' : '/';
+          setter(fullPath.substring(0, fullPath.lastIndexOf(sep)));
+        } else {
+          setter(file.name);
+        }
+      }
+      input.value = '';
+    };
+    ref.current.click();
+  };
+
   return (
     <header className={`${styles.header} ${theme === 'light' ? styles.headerLight : ''}`}>
       <div className={styles.left}>
@@ -93,9 +121,6 @@ export function Header({ onOpenInit }: Props) {
         >
           {isProcessingUpdates ? 'Processing…' : 'Process storage updates'}
         </button>
-        <button className={styles.menuItem} onClick={onOpenInit}>
-          Storage Init
-        </button>
       </div>
 
       {menuOpen && (
@@ -106,47 +131,109 @@ export function Header({ onOpenInit }: Props) {
           </div>
 
           <div className={styles.menuSection}>
-            <div className={styles.menuSectionTitle}>Folder paths</div>
-            <label className={styles.menuLabel}>
-              Incoming orders folder
-              <input
-                className={styles.menuInput}
-                type="text"
-                value={incomingOrdersFolder}
-                placeholder="C:\Storage\Orders"
-                onChange={(e) => setIncomingOrdersFolder(e.target.value)}
-              />
-            </label>
-            <label className={styles.menuLabel}>
-              Processed orders folder
-              <input
-                className={styles.menuInput}
-                type="text"
-                value={processedOrdersFolder}
-                placeholder="C:\Storage\Orders\Finished"
-                onChange={(e) => setProcessedOrdersFolder(e.target.value)}
-              />
-            </label>
-            <label className={styles.menuLabel}>
-              Incoming storage updates folder
-              <input
-                className={styles.menuInput}
-                type="text"
-                value={incomingUpdatesFolder}
-                placeholder="C:\Storage\Updates"
-                onChange={(e) => setIncomingUpdatesFolder(e.target.value)}
-              />
-            </label>
-            <label className={styles.menuLabel}>
-              Processed storage updates folder
-              <input
-                className={styles.menuInput}
-                type="text"
-                value={processedUpdatesFolder}
-                placeholder="C:\Storage\Updates\Finished"
-                onChange={(e) => setProcessedUpdatesFolder(e.target.value)}
-              />
-            </label>
+            <div className={styles.menuSectionTitle}>Store initialization</div>
+            <button
+              className={styles.menuActionButton}
+              onClick={() => { setMenuOpen(false); onOpenInit(); }}
+            >
+              Storage Init
+            </button>
+          </div>
+
+          <div className={styles.menuSection}>
+            <div className={styles.menuSectionTitle}>Directory settings</div>
+            <button
+              className={styles.menuActionButton}
+              onClick={() => setDirSettingsOpen((prev) => !prev)}
+            >
+              {dirSettingsOpen ? '▲ Hide directories' : '▼ Configure directories'}
+            </button>
+            {dirSettingsOpen && (
+              <div className={styles.dirSettings}>
+                {/* Hidden file inputs for folder picking */}
+                <input ref={incomingOrdersPickerRef} type="file" className={styles.hiddenFileInput} />
+                <input ref={processedOrdersPickerRef} type="file" className={styles.hiddenFileInput} />
+                <input ref={incomingUpdatesPickerRef} type="file" className={styles.hiddenFileInput} />
+                <input ref={processedUpdatesPickerRef} type="file" className={styles.hiddenFileInput} />
+
+                <div className={styles.menuLabel}>
+                  Incoming orders folder
+                  <div className={styles.filePickerRow}>
+                    <button
+                      type="button"
+                      className={styles.browseButton}
+                      onClick={() => handleFolderPick(incomingOrdersPickerRef, setIncomingOrdersFolder)}
+                    >
+                      Browse…
+                    </button>
+                    <input
+                      className={styles.menuInput}
+                      type="text"
+                      value={incomingOrdersFolder}
+                      placeholder="C:\Storage\Orders"
+                      onChange={(e) => setIncomingOrdersFolder(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className={styles.menuLabel}>
+                  Processed orders folder
+                  <div className={styles.filePickerRow}>
+                    <button
+                      type="button"
+                      className={styles.browseButton}
+                      onClick={() => handleFolderPick(processedOrdersPickerRef, setProcessedOrdersFolder)}
+                    >
+                      Browse…
+                    </button>
+                    <input
+                      className={styles.menuInput}
+                      type="text"
+                      value={processedOrdersFolder}
+                      placeholder="C:\Storage\Orders\Finished"
+                      onChange={(e) => setProcessedOrdersFolder(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className={styles.menuLabel}>
+                  Incoming storage updates folder
+                  <div className={styles.filePickerRow}>
+                    <button
+                      type="button"
+                      className={styles.browseButton}
+                      onClick={() => handleFolderPick(incomingUpdatesPickerRef, setIncomingUpdatesFolder)}
+                    >
+                      Browse…
+                    </button>
+                    <input
+                      className={styles.menuInput}
+                      type="text"
+                      value={incomingUpdatesFolder}
+                      placeholder="C:\Storage\Updates"
+                      onChange={(e) => setIncomingUpdatesFolder(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className={styles.menuLabel}>
+                  Processed storage updates folder
+                  <div className={styles.filePickerRow}>
+                    <button
+                      type="button"
+                      className={styles.browseButton}
+                      onClick={() => handleFolderPick(processedUpdatesPickerRef, setProcessedUpdatesFolder)}
+                    >
+                      Browse…
+                    </button>
+                    <input
+                      className={styles.menuInput}
+                      type="text"
+                      value={processedUpdatesFolder}
+                      placeholder="C:\Storage\Updates\Finished"
+                      onChange={(e) => setProcessedUpdatesFolder(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className={styles.menuSection}>

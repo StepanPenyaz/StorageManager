@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   type BsxFileMetadata,
   type CabinetConfig,
@@ -61,6 +61,7 @@ export function StorageInitWizard({ onClose }: Props) {
   const [startIndex, setStartIndex] = useState(1000);
   const [cabinets, setCabinets] = useState<WizardCabinet[]>([createCabinet(1)]);
   const [bsxFilePath, setBsxFilePath] = useState('');
+  const bsxFilePickerRef = useRef<HTMLInputElement>(null);
   const [initialize, initializeState] = useInitializeStorageMutation();
   const [loadBsxMetadata, metadataState] = useGetBsxFileMetadataMutation();
   const [processBsxFile, processState] = useProcessStorageInitializationFileMutation();
@@ -320,44 +321,65 @@ export function StorageInitWizard({ onClose }: Props) {
   };
 
   const renderGroupTable = (groups: GroupPreview[]) => {
-    const sorted = [...groups].sort((a, b) =>
-      a.groupRow !== b.groupRow ? a.groupRow - b.groupRow : a.groupColumn - b.groupColumn,
-    );
+    // Group by groupRow so each row of same-type groups renders as one unified grid
+    const byGroupRow = new Map<number, GroupPreview[]>();
+    for (const group of groups) {
+      const list = byGroupRow.get(group.groupRow) ?? [];
+      list.push(group);
+      byGroupRow.set(group.groupRow, list);
+    }
+    const sortedGroupRows = [...byGroupRow.entries()].sort(([a], [b]) => a - b);
 
-    const maxContainers = Math.max(...groups.map((g) => g.end - g.start + 1));
+    // Max display columns across all groupRows (for padding)
+    const maxDisplayCols = Math.max(
+      ...sortedGroupRows.map(([, rowGroups]) => {
+        const type = rowGroups[0].type;
+        return rowGroups.length * layoutMap[type].columns;
+      }),
+    );
 
     return (
       <table className={styles.shelfTable}>
         <thead>
           <tr>
             <th className={styles.headerCell}>Type</th>
-            {Array.from({ length: maxContainers }, (_, index) => (
-              <th key={index} className={styles.headerCell}>
-                C{index + 1}
+            {Array.from({ length: maxDisplayCols }, (_, i) => (
+              <th key={i} className={styles.headerCell}>
+                C{i + 1}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {sorted.map((group) => {
-            const showType = group.groupColumn === 1;
-            const count = group.end - group.start + 1;
-            const numbers = Array.from({ length: count }, (_, i) => group.start + i);
-            const padCount = maxContainers - count;
-
-            return (
-              <tr key={`${group.groupRow}-${group.groupColumn}`}>
-                <td className={styles.typeCell}>{showType ? group.type : ''}</td>
-                {numbers.map((num) => (
-                  <td key={num} className={styles.numberCell}>
-                    {num}
-                  </td>
-                ))}
-                {Array.from({ length: padCount }, (_, i) => (
-                  <td key={`pad-${i}`} className={styles.emptyCell} />
-                ))}
-              </tr>
+          {sortedGroupRows.flatMap(([groupRow, rowGroups]) => {
+            const sortedGroups = [...rowGroups].sort((a, b) => a.groupColumn - b.groupColumn);
+            const type = sortedGroups[0].type;
+            const layout = layoutMap[type];
+            const displayCols = sortedGroups.length * layout.columns;
+            const padCount = maxDisplayCols - displayCols;
+            const allContainers = sortedGroups.flatMap((g) =>
+              Array.from({ length: g.end - g.start + 1 }, (_, i) => g.start + i),
             );
+
+            return Array.from({ length: layout.rows }, (_, rowIdx) => {
+              const rowContainers = allContainers.slice(
+                rowIdx * displayCols,
+                (rowIdx + 1) * displayCols,
+              );
+              return (
+                <tr key={`${groupRow}-${rowIdx}`}>
+                  <td className={styles.typeCell}>{rowIdx === 0 ? type : ''}</td>
+                  {rowContainers.map((num) => (
+                    <td key={num} className={styles.numberCell}>
+                      {num}
+                    </td>
+                  ))}
+                  {Array.from({ length: padCount }, (_, i) => (
+                    <td key={`pad-${i}`} className={styles.emptyCell} />
+                  ))}
+                </tr>
+              );
+            });
           })}
         </tbody>
       </table>
@@ -572,13 +594,36 @@ export function StorageInitWizard({ onClose }: Props) {
             <div className={styles.fileInput}>
               <label className={styles.fieldLabel}>
                 BSX file path
-                <input
-                  type="text"
-                  className={styles.input}
-                  value={bsxFilePath}
-                  placeholder="C:\\path\\to\\storage-file.bsx"
-                  onChange={(e) => handleBsxPathChange(e.target.value)}
-                />
+                <div className={styles.filePickerRow}>
+                  <input
+                    ref={bsxFilePickerRef}
+                    type="file"
+                    accept=".bsx"
+                    className={styles.hiddenFileInput}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const fullPath = (file as File & { path?: string }).path ?? file.name;
+                        handleBsxPathChange(fullPath);
+                      }
+                      e.target.value = '';
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className={styles.browseButton}
+                    onClick={() => bsxFilePickerRef.current?.click()}
+                  >
+                    Browse…
+                  </button>
+                  <input
+                    type="text"
+                    className={`${styles.input} ${styles.filePathInput}`}
+                    value={bsxFilePath}
+                    placeholder="C:\\path\\to\\storage-file.bsx"
+                    onChange={(e) => handleBsxPathChange(e.target.value)}
+                  />
+                </div>
               </label>
               <div className={styles.stepActions}>
                 <button
