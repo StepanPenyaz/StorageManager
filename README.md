@@ -1,5 +1,37 @@
 # StorageManager
 
+## Docker Quick Start (Demo)
+
+Run the full stack locally with a single command — no manual DB setup required.
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/get-started) with Docker Compose
+
+### Commands
+
+```bash
+# Start all services (db, api, frontend)
+docker-compose up --build -d
+
+# View API logs
+docker-compose logs -f api
+
+# Stop all services
+docker-compose down
+```
+
+Once running:
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:5000
+
+Data persists between restarts via a Docker volume for MSSQL.
+
+> **Note:** The values in `docker-compose.yml` are for demo/local use only. Do not use them in production.
+> To customise ports or credentials, copy `docker-compose.override.example.yml` to `docker-compose.override.yml` and adjust as needed.
+
+---
+
 ## Local run
 
 This guide describes how to run the StorageManager project on a local machine.
