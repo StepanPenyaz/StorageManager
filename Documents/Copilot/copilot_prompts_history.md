@@ -115,7 +115,7 @@ Use the existing models in `Storage.Domain.Models` as a **reference and pattern 
 ```
 # Copilot Prompt: Generate Data layer
 
-The data layer for the project should be added. 
+The data layer for the project should be added.
 Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope of work.
 
 ## Instructions
@@ -269,6 +269,30 @@ Use `Documents/DesignDocuments/data_layer_requirements.md` as the defined scope 
 
 * Take all tricky parts from the PR description
 * Add them as required changes to the target file
+
+---
+
+## Documentation
+
+* Record this request in: `Documents/Copilot/copilot_prompts_history.md`
+* Include:
+
+  * Date
+  * Used AI model
+```
+
+---
+
+### 2026-03-23 — GitHub Copilot (GPT-5.4)
+
+**Full Prompt:**
+
+```
+# UI Improvements part 3
+
+## Instructions
+
+* Implement `\Documents\Design documents\ui_improvements_3.md` requirements
 
 ---
 

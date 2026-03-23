@@ -32,8 +32,33 @@ export interface CabinetConfig {
 export interface StorageInitializationRequest {
   startIndex: number;
   cabinets: CabinetConfig[];
-  bsxFileName?: string;
-  bsxFileContentBase64?: string | null;
+}
+
+export interface BsxFilePathRequest {
+  filePath: string;
+}
+
+export interface BsxFileMetadata {
+  fileName: string;
+  filePath: string;
+  fileSizeBytes: number;
+}
+
+export interface BsxFileProcessingRequest {
+  filePath: string;
+  batchSize?: number;
+}
+
+export interface BsxFileProcessingResult {
+  status: string;
+  processedItemCount: number;
+  createdLotCount: number;
+  updatedLotCount: number;
+  warningCount: number;
+  errorCount: number;
+  elapsedMilliseconds: number;
+  summaryMessage: string;
+  warnings: string[];
 }
 
 const initialState: StorageState = {

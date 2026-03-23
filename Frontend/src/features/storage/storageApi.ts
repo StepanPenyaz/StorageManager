@@ -1,5 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { ContainerDto, StorageInitializationRequest } from './storageSlice';
+import type {
+  BsxFileMetadata,
+  BsxFilePathRequest,
+  BsxFileProcessingRequest,
+  BsxFileProcessingResult,
+  ContainerDto,
+  StorageInitializationRequest,
+} from './storageSlice';
 
 export const storageApi = createApi({
   reducerPath: 'storageApi',
@@ -25,11 +32,30 @@ export const storageApi = createApi({
         body,
       }),
     }),
+    getBsxFileMetadata: builder.mutation<BsxFileMetadata, BsxFilePathRequest>({
+      query: (body) => ({
+        url: '/init/bsx/metadata',
+        method: 'POST',
+        body,
+      }),
+    }),
+    processStorageInitializationFile: builder.mutation<
+      BsxFileProcessingResult,
+      BsxFileProcessingRequest
+    >({
+      query: (body) => ({
+        url: '/init/bsx/process',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetCabinetsQuery,
   useGetCabinetContainersQuery,
+  useGetBsxFileMetadataMutation,
   useInitializeStorageMutation,
+  useProcessStorageInitializationFileMutation,
 } = storageApi;

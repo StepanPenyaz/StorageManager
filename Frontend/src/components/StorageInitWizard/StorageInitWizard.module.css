@@ -165,12 +165,19 @@
   flex: 1;
 }
 
+.rowItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
 .rowLabel {
   display: flex;
   flex-direction: column;
   gap: 4px;
   color: #94a3b8;
   font-size: 13px;
+  flex: 1;
 }
 
 .summary {
@@ -227,6 +234,35 @@
   margin-bottom: 6px;
 }
 
+.metadataCard {
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px;
+  background: #0b1220;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metadataRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metadataValue {
+  color: #e2e8f0;
+  word-break: break-word;
+}
+
+.stepActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
 .shelfPreview {
   margin-top: 10px;
 }
@@ -244,6 +280,15 @@
   border-collapse: collapse;
   font-size: 12px;
   margin-top: 4px;
+}
+
+.headerCell {
+  color: #94a3b8;
+  font-weight: 700;
+  text-align: center;
+  padding: 6px 8px;
+  border: 1px solid #1e293b;
+  background: #111827;
 }
 
 .typeCell {
@@ -315,6 +360,27 @@
   padding: 10px;
 }
 
+.warningMessage {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.warningTitle {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.warningList {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .footer {
   display: flex;
   align-items: center;
@@ -356,7 +422,27 @@
   border: 1px solid #f87171;
 }
 
+.iconButton {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondaryButton:disabled,
+.removeButton:disabled,
+.iconButton:disabled,
+.addRowButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
