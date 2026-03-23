@@ -14,6 +14,7 @@ export interface ContainerDto {
 
 interface StorageState {
   selectedCabinet: number | null;
+  theme: 'dark' | 'light';
 }
 
 export type ContainerTypeOption = 'PX12' | 'PX6' | 'PX4' | 'PX2';
@@ -61,8 +62,27 @@ export interface BsxFileProcessingResult {
   warnings: string[];
 }
 
+export interface ProcessOrdersRequest {
+  incomingOrdersFolder: string;
+  processedOrdersFolder: string;
+}
+
+export interface ProcessStorageUpdatesRequest {
+  incomingStorageUpdatesFolder: string;
+  processedStorageUpdatesFolder: string;
+}
+
+export interface ProcessingResult {
+  filesProcessed: number;
+  itemsProcessed: number;
+  warningCount: number;
+  errorCount: number;
+  warnings: string[];
+}
+
 const initialState: StorageState = {
   selectedCabinet: null,
+  theme: 'dark',
 };
 
 const storageSlice = createSlice({
@@ -72,8 +92,11 @@ const storageSlice = createSlice({
     selectCabinet(state, action: PayloadAction<number>) {
       state.selectedCabinet = action.payload;
     },
+    toggleTheme(state) {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    },
   },
 });
 
-export const { selectCabinet } = storageSlice.actions;
+export const { selectCabinet, toggleTheme } = storageSlice.actions;
 export default storageSlice.reducer;

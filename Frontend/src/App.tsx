@@ -13,7 +13,8 @@ function App() {
   const dispatch = useDispatch();
   const [showInit, setShowInit] = useState(false);
   const selectedCabinet = useSelector((state: RootState) => state.storage.selectedCabinet);
-  const { data: cabinets, isLoading } = useGetCabinetsQuery();
+  const theme = useSelector((state: RootState) => state.storage.theme);
+  const { data: cabinets, isLoading, refetch } = useGetCabinetsQuery();
 
   useEffect(() => {
     if (cabinets && cabinets.length > 0 && selectedCabinet === null) {
@@ -21,8 +22,17 @@ function App() {
     }
   }, [cabinets, selectedCabinet, dispatch]);
 
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const handleInitClose = () => {
+    setShowInit(false);
+    refetch();
+  };
+
   return (
-    <div className="appLayout">
+    <div className={`appLayout ${theme === 'light' ? 'appLayoutLight' : ''}`}>
       <Header onOpenInit={() => setShowInit(true)} />
       {isLoading ? (
         <div className="loadingMessage">Loading storage data…</div>
@@ -32,7 +42,7 @@ function App() {
           {selectedCabinet !== null && <CabinetView cabinetNumber={selectedCabinet} />}
         </>
       )}
-      {showInit && <StorageInitWizard onClose={() => setShowInit(false)} />}
+      {showInit && <StorageInitWizard onClose={handleInitClose} />}
     </div>
   );
 }

@@ -7,9 +7,21 @@
   background-color: #1a1a2e;
   border-bottom: 2px solid #16213e;
   flex-shrink: 0;
+  position: relative;
+}
+
+.headerLight {
+  background-color: #e8eaf6;
+  border-bottom: 2px solid #c5cae9;
 }
 
 .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.right {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -23,6 +35,10 @@
   letter-spacing: 1px;
 }
 
+.headerLight .title {
+  color: #1a237e;
+}
+
 .menuButton {
   background: #0f172a;
   border: 1px solid #243152;
@@ -34,12 +50,6 @@
   cursor: pointer;
 }
 
-.menu {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .menuItem {
   background: #243152;
   border: 1px solid #2f3f68;
@@ -48,4 +58,172 @@
   padding: 10px 16px;
   cursor: pointer;
   font-weight: 600;
+}
+
+.actionButton {
+  background: #1e3a5f;
+  border: 1px solid #2f5986;
+  border-radius: 10px;
+  color: #e0e0e0;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.actionButton:hover:not(:disabled) {
+  background: #254d7a;
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Burger menu panel */
+.menuPanel {
+  position: absolute;
+  top: 120px;
+  left: 0;
+  width: 380px;
+  background: #1a1a2e;
+  border: 1px solid #2f3f68;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 20px;
+  z-index: 100;
+  box-shadow: 4px 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.menuPanelLight {
+  background: #f5f5ff;
+  border-color: #9fa8da;
+  box-shadow: 4px 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.menuPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.menuPanelTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e0e0e0;
+}
+
+.menuPanelLight .menuPanelTitle {
+  color: #1a237e;
+}
+
+.closeMenuButton {
+  background: transparent;
+  border: none;
+  color: #e0e0e0;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.closeMenuButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menuSection {
+  margin-bottom: 20px;
+}
+
+.menuSectionTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8888aa;
+  margin-bottom: 10px;
+}
+
+.menuLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #c0c0d8;
+  margin-bottom: 10px;
+}
+
+.menuInput {
+  background: #0f172a;
+  border: 1px solid #2f3f68;
+  border-radius: 6px;
+  color: #e0e0e0;
+  padding: 7px 10px;
+  font-size: 13px;
+  width: 100%;
+}
+
+.menuInput:focus {
+  outline: none;
+  border-color: #4f6faa;
+}
+
+.themeToggleButton {
+  background: #243152;
+  border: 1px solid #2f3f68;
+  border-radius: 8px;
+  color: #e0e0e0;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  width: 100%;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.themeToggleButton:hover {
+  background: #2f3f68;
+}
+
+/* Feedback bar */
+.feedbackBar {
+  position: absolute;
+  bottom: -44px;
+  left: 0;
+  right: 0;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 90;
+}
+
+.feedbackSuccess {
+  background: #1b4332;
+  color: #6ee7b7;
+  border-bottom: 1px solid #2d6a4f;
+}
+
+.feedbackError {
+  background: #4c1d1d;
+  color: #fca5a5;
+  border-bottom: 1px solid #7f1d1d;
+}
+
+.feedbackClose {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.feedbackClose:hover {
+  background: rgba(255, 255, 255, 0.15);
 }

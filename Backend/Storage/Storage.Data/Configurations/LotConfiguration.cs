@@ -14,7 +14,7 @@ public class LotConfiguration : IEntityTypeConfiguration<Lot>
 
         builder.Property(lot => lot.Id).ValueGeneratedOnAdd();
 
-        builder.Property(lot => lot.ItemId).IsRequired();
+        builder.Property(lot => lot.ItemId).IsRequired().HasMaxLength(100);
 
         builder.HasMany(lot => lot.LotSections)
             .WithOne()
