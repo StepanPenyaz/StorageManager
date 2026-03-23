@@ -8,7 +8,12 @@ import { useInitializeStorageMutation } from '../../features/storage/storageApi'
 import styles from './StorageInitWizard.module.css';
 
 type WizardShelf = { shelfIndex: number; rowTypes: (ContainerTypeOption | null)[] };
-type WizardCabinet = { cabinetIndex: number; shelves: WizardShelf[] };
+type WizardCabinet = {
+  cabinetIndex: number;
+  shelfCount: number;
+  groupColumnsCount: number;
+  shelves: WizardShelf[];
+};
 
 type GroupPreview = {
   groupRow: number;
@@ -24,21 +29,22 @@ type CabinetPreview = { cabinetIndex: number; shelves: ShelfPreview[] };
 const typeOptions: ContainerTypeOption[] = ['PX12', 'PX6', 'PX4', 'PX2'];
 
 const layoutMap: Record<ContainerTypeOption, { rows: number; columns: number; sections: number }> = {
-  PX12: { rows: 4, columns: 3, sections: 3 },
-  PX6: { rows: 2, columns: 3, sections: 1 },
+  PX12: { rows: 3, columns: 4, sections: 3 },
+  PX6: { rows: 3, columns: 2, sections: 1 },
   PX4: { rows: 2, columns: 2, sections: 1 },
   PX2: { rows: 1, columns: 2, sections: 1 },
 };
 
-const createDefaultShelves = (): WizardShelf[] =>
-  Array.from({ length: 4 }, (_, index) => ({
-    shelfIndex: index + 1,
-    rowTypes: [null, null, null],
-  }));
+const createShelf = (index: number): WizardShelf => ({
+  shelfIndex: index,
+  rowTypes: [null],
+});
 
 const createCabinet = (index: number): WizardCabinet => ({
   cabinetIndex: index,
-  shelves: createDefaultShelves(),
+  shelfCount: 1,
+  groupColumnsCount: 3,
+  shelves: [createShelf(1)],
 });
 
 interface Props {
@@ -59,8 +65,11 @@ export function StorageInitWizard({ onClose }: Props) {
       cabinets.length > 0 &&
       cabinets.every(
         (cabinet) =>
-          cabinet.shelves.length === 4 &&
-          cabinet.shelves.every((shelf) => shelf.rowTypes.every((type) => type !== null)),
+          cabinet.groupColumnsCount >= 1 &&
+          cabinet.shelves.length >= 1 &&
+          cabinet.shelves.every(
+            (shelf) => shelf.rowTypes.length >= 1 && shelf.rowTypes.every((type) => type !== null),
+          ),
       ),
     [cabinets, startIndex],
   );
@@ -84,19 +93,20 @@ export function StorageInitWizard({ onClose }: Props) {
       for (const shelf of [...cabinet.shelves].sort((a, b) => a.shelfIndex - b.shelfIndex)) {
         const groups: GroupPreview[] = [];
 
-        for (let groupRow = 1; groupRow <= 3; groupRow++) {
-          for (let groupColumn = 1; groupColumn <= 3; groupColumn++) {
-            const type = shelf.rowTypes[groupRow - 1]!;
-            const layout = layoutMap[type];
-            const count = layout.rows * layout.columns;
+        for (let groupRow = 1; groupRow <= shelf.rowTypes.length; groupRow++) {
+          const type = shelf.rowTypes[groupRow - 1]!;
+          const layout = layoutMap[type];
+          const countPerGroup = layout.rows * layout.columns;
+
+          for (let groupColumn = 1; groupColumn <= cabinet.groupColumnsCount; groupColumn++) {
             const start = current;
-            const end = current + count - 1;
+            const end = current + countPerGroup - 1;
 
             groups.push({ groupRow, groupColumn, type, start, end });
 
-            containersByType[type] += count;
-            totalSections += count * layout.sections;
-            current += count;
+            containersByType[type] += countPerGroup;
+            totalSections += countPerGroup * layout.sections;
+            current += countPerGroup;
           }
         }
 
@@ -147,6 +157,56 @@ export function StorageInitWizard({ onClose }: Props) {
     );
   };
 
+  const addGroupRow = (cabinetIndex: number, shelfIndex: number) => {
+    setCabinets((prev) =>
+      prev.map((cabinet) =>
+        cabinet.cabinetIndex !== cabinetIndex
+          ? cabinet
+          : {
+              ...cabinet,
+              shelves: cabinet.shelves.map((shelf) =>
+                shelf.shelfIndex !== shelfIndex
+                  ? shelf
+                  : { ...shelf, rowTypes: [...shelf.rowTypes, null] },
+              ),
+            },
+      ),
+    );
+  };
+
+  const updateShelfCount = (cabinetIndex: number, newCount: number) => {
+    const count = Math.max(1, newCount);
+    setCabinets((prev) =>
+      prev.map((cabinet) => {
+        if (cabinet.cabinetIndex !== cabinetIndex) return cabinet;
+
+        const current = cabinet.shelves;
+        const updated =
+          count > current.length
+            ? [
+                ...current,
+                ...Array.from({ length: count - current.length }, (_, i) =>
+                  createShelf(current.length + i + 1),
+                ),
+              ]
+            : current.slice(0, count);
+
+        return { ...cabinet, shelfCount: count, shelves: updated };
+      }),
+    );
+  };
+
+  const updateGroupColumnsCount = (cabinetIndex: number, newCount: number) => {
+    const count = Math.max(1, newCount);
+    setCabinets((prev) =>
+      prev.map((cabinet) =>
+        cabinet.cabinetIndex !== cabinetIndex
+          ? cabinet
+          : { ...cabinet, groupColumnsCount: count },
+      ),
+    );
+  };
+
   const addCabinet = () => {
     const nextIndex = Math.max(...cabinets.map((c) => c.cabinetIndex)) + 1;
     setCabinets([...cabinets, createCabinet(nextIndex)]);
@@ -162,6 +222,7 @@ export function StorageInitWizard({ onClose }: Props) {
     cabinets: cabinets
       .map<CabinetConfig>((cabinet) => ({
         cabinetIndex: cabinet.cabinetIndex,
+        groupColumnsCount: cabinet.groupColumnsCount,
         shelves: cabinet.shelves.map((shelf) => ({
           shelfIndex: shelf.shelfIndex,
           rowTypes: shelf.rowTypes.filter(Boolean) as ContainerTypeOption[],
@@ -177,13 +238,16 @@ export function StorageInitWizard({ onClose }: Props) {
     await initialize(toRequest());
   };
 
-  const renderGroupGrid = (groups: GroupPreview[]) => {
+  const renderGroupGrid = (groups: GroupPreview[], groupColumnsCount: number) => {
     const sorted = [...groups].sort((a, b) =>
       a.groupRow !== b.groupRow ? a.groupRow - b.groupRow : a.groupColumn - b.groupColumn,
     );
 
     return (
-      <div className={styles.groupGrid}>
+      <div
+        className={styles.groupGrid}
+        style={{ gridTemplateColumns: `repeat(${groupColumnsCount}, minmax(0, 1fr))` }}
+      >
         {sorted.map((group) => (
           <div key={`${group.groupRow}-${group.groupColumn}`} className={styles.groupCell}>
             <div className={styles.groupHeader}>
@@ -248,34 +312,72 @@ export function StorageInitWizard({ onClose }: Props) {
                     </button>
                   )}
                 </div>
+                <div className={styles.cabinetConfig}>
+                  <label className={styles.configLabel}>
+                    Shelf count
+                    <input
+                      type="number"
+                      className={styles.configInput}
+                      value={cabinet.shelfCount}
+                      min={1}
+                      onChange={(e) =>
+                        updateShelfCount(cabinet.cabinetIndex, parseInt(e.target.value, 10) || 1)
+                      }
+                    />
+                  </label>
+                  <label className={styles.configLabel}>
+                    Container groups column count
+                    <input
+                      type="number"
+                      className={styles.configInput}
+                      value={cabinet.groupColumnsCount}
+                      min={1}
+                      onChange={(e) =>
+                        updateGroupColumnsCount(
+                          cabinet.cabinetIndex,
+                          parseInt(e.target.value, 10) || 1,
+                        )
+                      }
+                    />
+                  </label>
+                </div>
                 {cabinet.shelves.map((shelf) => (
                   <div key={shelf.shelfIndex} className={styles.shelfBlock}>
                     <div className={styles.shelfTitle}>Shelf {shelf.shelfIndex}</div>
-                    <div className={styles.rowSelectors}>
-                      {shelf.rowTypes.map((value, rowIdx) => (
-                        <label key={rowIdx} className={styles.rowLabel}>
-                          Group row {rowIdx + 1}
-                          <select
-                            className={styles.select}
-                            value={value ?? ''}
-                            onChange={(e) =>
-                              updateType(
-                                cabinet.cabinetIndex,
-                                shelf.shelfIndex,
-                                rowIdx,
-                                e.target.value,
-                              )
-                            }
-                          >
-                            <option value="">Select type</option>
-                            {typeOptions.map((option) => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      ))}
+                    <div className={styles.shelfRowsArea}>
+                      <div className={styles.rowSelectors}>
+                        {shelf.rowTypes.map((value, rowIdx) => (
+                          <label key={rowIdx} className={styles.rowLabel}>
+                            Group row {rowIdx + 1}
+                            <select
+                              className={styles.select}
+                              value={value ?? ''}
+                              onChange={(e) =>
+                                updateType(
+                                  cabinet.cabinetIndex,
+                                  shelf.shelfIndex,
+                                  rowIdx,
+                                  e.target.value,
+                                )
+                              }
+                            >
+                              <option value="">Select type</option>
+                              {typeOptions.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                        ))}
+                      </div>
+                      <button
+                        className={styles.addRowButton}
+                        onClick={() => addGroupRow(cabinet.cabinetIndex, shelf.shelfIndex)}
+                        title="Add group row"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -319,17 +421,21 @@ export function StorageInitWizard({ onClose }: Props) {
               {bsxFile && <div className={styles.helper}>{bsxFile.name}</div>}
             </div>
 
-            {preview.cabinets.map((cabinet) => (
-              <div key={cabinet.cabinetIndex} className={styles.previewCard}>
-                <div className={styles.previewHeader}>Cabinet {cabinet.cabinetIndex}</div>
-                {cabinet.shelves.map((shelf) => (
-                  <div key={shelf.shelfIndex} className={styles.shelfPreview}>
-                    <div className={styles.shelfTitle}>Shelf {shelf.shelfIndex}</div>
-                    {renderGroupGrid(shelf.groups)}
-                  </div>
-                ))}
-              </div>
-            ))}
+            {preview.cabinets.map((cabinet) => {
+              const wizardCabinet = cabinets.find((c) => c.cabinetIndex === cabinet.cabinetIndex);
+              if (!wizardCabinet) return null;
+              return (
+                <div key={cabinet.cabinetIndex} className={styles.previewCard}>
+                  <div className={styles.previewHeader}>Cabinet {cabinet.cabinetIndex}</div>
+                  {cabinet.shelves.map((shelf) => (
+                    <div key={shelf.shelfIndex} className={styles.shelfPreview}>
+                      <div className={styles.shelfTitle}>Shelf {shelf.shelfIndex}</div>
+                      {renderGroupGrid(shelf.groups, wizardCabinet.groupColumnsCount)}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
 
             {isSuccess && (
               <div className={styles.successMessage}>

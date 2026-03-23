@@ -15,6 +15,8 @@ public class CabinetInitializationDto
 {
     public required int CabinetIndex { get; init; }
 
+    public required int GroupColumnsCount { get; init; }
+
     public required IReadOnlyCollection<ShelfInitializationDto> Shelves { get; init; }
 }
 

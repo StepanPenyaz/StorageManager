@@ -41,6 +41,7 @@ public class StorageInitializationController(IStorageInitializationService initi
                 .Select(c => new CabinetConfiguration
                 {
                     CabinetIndex = c.CabinetIndex,
+                    GroupColumnsCount = c.GroupColumnsCount,
                     Shelves = c.Shelves
                         .OrderBy(s => s.ShelfIndex)
                         .Select(s => new ShelfConfiguration

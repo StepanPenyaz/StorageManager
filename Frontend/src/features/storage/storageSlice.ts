@@ -25,6 +25,7 @@ export interface ShelfConfig {
 
 export interface CabinetConfig {
   cabinetIndex: number;
+  groupColumnsCount: number;
   shelves: ShelfConfig[];
 }
 

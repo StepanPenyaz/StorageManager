@@ -11,8 +11,8 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
 {
     private static readonly IReadOnlyDictionary<ContainerType, (int rows, int columns)> LayoutMap = new Dictionary<ContainerType, (int rows, int columns)>
     {
-        [ContainerType.PX12] = (4, 3),
-        [ContainerType.PX6] = (2, 3),
+        [ContainerType.PX12] = (3, 4),
+        [ContainerType.PX6] = (3, 2),
         [ContainerType.PX4] = (2, 2),
         [ContainerType.PX2] = (1, 2)
     };
@@ -32,11 +32,13 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
         {
             foreach (var shelf in cabinet.Shelves.OrderBy(s => s.ShelfIndex))
             {
-                for (var groupRow = 1; groupRow <= 3; groupRow++)
+                var rowTypes = shelf.RowTypes.ToList();
+
+                for (var groupRow = 1; groupRow <= rowTypes.Count; groupRow++)
                 {
-                    for (var groupColumn = 1; groupColumn <= 3; groupColumn++)
+                    for (var groupColumn = 1; groupColumn <= cabinet.GroupColumnsCount; groupColumn++)
                     {
-                        var type = shelf.RowTypes.ElementAt(groupRow - 1);
+                        var type = rowTypes[groupRow - 1];
                         var group = new ContainerGroup(type, cabinet.CabinetIndex, shelf.ShelfIndex, groupRow, groupColumn);
                         var layout = LayoutMap[type];
 
@@ -93,13 +95,16 @@ public class StorageInitializationService(StorageContext context) : IStorageInit
 
         foreach (var cabinet in request.Cabinets)
         {
-            if (cabinet.Shelves.Count != 4)
-                throw new InvalidOperationException($"Cabinet {cabinet.CabinetIndex} must contain exactly 4 shelves.");
+            if (cabinet.GroupColumnsCount < 1)
+                throw new ArgumentOutOfRangeException(nameof(cabinet.GroupColumnsCount), $"Cabinet {cabinet.CabinetIndex} must have at least 1 container group column.");
+
+            if (cabinet.Shelves.Count == 0)
+                throw new InvalidOperationException($"Cabinet {cabinet.CabinetIndex} must contain at least one shelf.");
 
             foreach (var shelf in cabinet.Shelves)
             {
-                if (shelf.RowTypes.Count != 3)
-                    throw new InvalidOperationException($"Shelf {shelf.ShelfIndex} in cabinet {cabinet.CabinetIndex} must provide container types for all 3 group rows.");
+                if (shelf.RowTypes.Count == 0)
+                    throw new InvalidOperationException($"Shelf {shelf.ShelfIndex} in cabinet {cabinet.CabinetIndex} must provide at least one container group row type.");
 
                 foreach (var type in shelf.RowTypes)
                 {

@@ -103,6 +103,48 @@
   margin-bottom: 8px;
 }
 
+.cabinetConfig {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.configLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.configInput {
+  background: #0b1220;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: #e2e8f0;
+  width: 80px;
+}
+
+.shelfRowsArea {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.addRowButton {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #e2e8f0;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  font-size: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
 .shelfBlock {
   border: 1px dashed #1e293b;
   border-radius: 8px;
@@ -117,9 +159,10 @@
 }
 
 .rowSelectors {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+  flex: 1;
 }
 
 .rowLabel {
@@ -190,7 +233,6 @@
 
 .groupGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
