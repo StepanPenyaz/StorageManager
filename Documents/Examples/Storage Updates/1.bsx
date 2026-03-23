@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+ <Inventory Currency="USD" BrickLinkChangelogId="450500">
+  <Item>
+   <ItemID>3794b</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>85</ColorID>
+   <ItemName>Plate, Modified 1 x 2 with 1 Stud with Groove (Jumper)</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Dark Bluish Gray</ColorName>
+   <CategoryID>27</CategoryID>
+   <CategoryName>Plate, Modified</CategoryName>
+   <Status>I</Status>
+   <Qty>200</Qty>
+   <Price>0.001</Price>
+   <Condition>U</Condition>
+   <Remarks>#1153</Remarks>
+   <DateAdded>2026-03-23T14:39:37Z</DateAdded>
+   <DateLastSold>2026-01-31T00:09:00Z</DateLastSold>
+   <DifferenceBaseValues Remarks=""/>
+  </Item>
+  <Item>
+   <ItemID>3666</ItemID>
+   <ItemTypeID>P</ItemTypeID>
+   <ColorID>85</ColorID>
+   <ItemName>Plate 1 x 6</ItemName>
+   <ItemTypeName>Part</ItemTypeName>
+   <ColorName>Dark Bluish Gray</ColorName>
+   <CategoryID>26</CategoryID>
+   <CategoryName>Plate</CategoryName>
+   <Status>I</Status>
+   <Qty>76</Qty>
+   <Price>0.001</Price>
+   <Condition>U</Condition>
+   <Remarks>#1140</Remarks>
+   <DateAdded>2026-03-23T14:40:06Z</DateAdded>
+   <DateLastSold>2026-03-14T20:25:00Z</DateLastSold>
+   <DifferenceBaseValues Remarks=""/>
+  </Item>
+ </Inventory>
+ <GuiState Application="BrickStore" Version="2">
+  <ColumnLayout Compressed="1"><![CDATA[AAABa3icNc9JCgJBDIXhxHnWdp7admoRXOnWjSdwJyh4Ce/pnTSB/AUPPl5STdf1+DqLSNFysOjPjhpSiXPx1vGMNblbSo6vpew4WSqOj6VKU9NAHTR8dLM0NdACbUYd0OU7PZAwGoKR420ZgwnLU3ZmNHOaBc2SJgUrkIE12IAd1/c0A8fDUtBAn3dtNf43lz/2bhFx]]></ColumnLayout>
+  <SortFilterState Compressed="1"><![CDATA[AAAAHHicY2BgYAl2Cw5hANKM/xlAgIkBAhgBK/ACTA==]]></SortFilterState>
+ </GuiState>
+</BrickStoreXML>
