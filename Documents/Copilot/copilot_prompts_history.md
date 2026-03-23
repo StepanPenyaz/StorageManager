@@ -14,6 +14,16 @@
 * Implement `Documents\Design documents\unit_tests_requirements.md` requirements
 THEN
 * Implement `Documents\Design documents\sumary_preparation.md` requirements
+# Copilot repository context preparation
+
+## Instructions
+
+* Implement `Documents\Design documents\copilot_context_build.md` requirements
+# Local Deployment (Demo) Requirements
+
+## Instructions
+
+* Implement `Documents\Design documents\local_env_requirements_docker.md` requirements
 
 ---
 
