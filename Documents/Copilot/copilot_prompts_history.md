@@ -7,6 +7,11 @@
 **Full Prompt:**
 
 ```
+# Copilot repository context preparation
+
+## Instructions
+
+* Implement `Documents\Design documents\copilot_context_build.md` requirements
 # Local Deployment (Demo) Requirements
 
 ## Instructions
