@@ -10,6 +10,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("LocalDev", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    });
+}
+
 builder.Services.AddDbContext<StorageContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("StorageDatabase")));
 
@@ -21,6 +34,12 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
     app.MapOpenApi();
+
+// UseCors must come before UseHttpsRedirection so that the CORS middleware
+// can process preflight (OPTIONS) requests and return 204 with the correct
+// Access-Control-Allow-Origin header before the HTTPS redirect fires.
+if (app.Environment.IsDevelopment())
+    app.UseCors("LocalDev");
 
 app.UseHttpsRedirection();
 app.MapControllers();
