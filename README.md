@@ -24,16 +24,6 @@ dotnet ef database update --project Backend/Storage/Storage.Data --startup-proje
 
 This creates the `StorageManager` database on your local `localhost\SQLEXPRESS` instance using Windows Integrated Security.
 
-**1.2. Seed initial data**
-
-Open `Documents/Scripts/initial_data_seed.sql` in SQL Server Management Studio (or `sqlcmd`) and execute it against the `StorageManager` database.
-
-Using `sqlcmd`:
-
-```bash
-sqlcmd -S localhost\SQLEXPRESS -d StorageManager -E -i "Documents/Scripts/initial_data_seed.sql"
-```
-
 ### 2. Backend
 
 Navigate to the API project folder and start the development server:

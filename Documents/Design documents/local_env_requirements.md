@@ -17,7 +17,6 @@ The following software must be installed before running the project locally:
 - Windows Integrated Security must be enabled
 - A database named `StorageManager` must exist
 - The schema must be created using EF Core migrations (`dotnet ef database update`)
-- Seed data must be applied using `Documents/Scripts/initial_data_seed.sql`
 
 ## Backend Requirements
 
@@ -36,6 +35,5 @@ The following software must be installed before running the project locally:
 
 1. Start SQL Server Express
 2. Apply database migrations
-3. Run seed data script
-4. Start the backend API
-5. Start the frontend development server
+3. Start the backend API
+4. Start the frontend development server
