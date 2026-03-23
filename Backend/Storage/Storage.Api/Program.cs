@@ -16,7 +16,7 @@ if (builder.Environment.IsDevelopment())
     {
         options.AddPolicy("LocalDev", policy =>
         {
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5173", "http://localhost:3000")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -35,6 +35,12 @@ builder.Services.AddScoped<IStorageUpdateFileParser, StorageUpdateFileParser>();
 builder.Services.AddScoped<IStorageUpdateProcessingService, StorageUpdateProcessingService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<StorageContext>();
+    db.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
     app.MapOpenApi();

@@ -12,6 +12,23 @@
 ## Instructions
 
 * Implement `Documents\Design documents\list_for_fix.md` requirements
+# Unit tests + Summary of Phase 1
+
+## Instructions
+* IMPORTANT: Start work when repository doesn't have open PRs and running agents
+* Implement `Documents\Design documents\unit_tests_requirements.md` requirements
+THEN
+* Implement `Documents\Design documents\sumary_preparation.md` requirements
+# Copilot repository context preparation
+
+## Instructions
+
+* Implement `Documents\Design documents\copilot_context_build.md` requirements
+# Local Deployment (Demo) Requirements
+
+## Instructions
+
+* Implement `Documents\Design documents\local_env_requirements_docker.md` requirements
 
 ---
 

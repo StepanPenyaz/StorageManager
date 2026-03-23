@@ -3,4 +3,5 @@
   <Project Path="Storage.Data/Storage.Data.csproj" />
   <Project Path="Storage.Domain/Storage.Domain.csproj" />
   <Project Path="Storage.Services/Storage.Services.csproj" />
+  <Project Path="Storage.Tests/Storage.Tests.csproj" />
 </Solution>
