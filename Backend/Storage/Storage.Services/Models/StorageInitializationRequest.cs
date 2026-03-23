@@ -17,6 +17,8 @@ public class CabinetConfiguration
 {
     public required int CabinetIndex { get; init; }
 
+    public required int GroupColumnsCount { get; init; }
+
     public required IReadOnlyCollection<ShelfConfiguration> Shelves { get; init; }
 }
 
